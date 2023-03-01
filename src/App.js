@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Header from './components/Header/Header';
+import Navbar from './components/Navbar/Navbar';
+import Profile from './components/Profile/Profile';
+import Dialogs from "./components/Dialogs/Dialogs";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import state from "./redux/store";
+import store from "./redux/store";
+import DialogsContainer from "./components/Dialogs/DialogsContainer";
 
-function App() {
+const App = ( props ) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <BrowserRouter>
+        <div className='app-wrapper'>
+          <Header/>
+          <Navbar/>
+          <div className='app-wrapper-content'>
+            <Routes>
+              <Route path="/dialogs"
+                     // element={<Dialogs store={props.store} // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
+                     element={<DialogsContainer store={props.store}
+                     />}/>
+              <Route path="/profile"
+                     element={<Profile store = {props.store}
+                         // profilePage={props.state.profilePage} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
+                         // addPost={props.addPost}
+                         // updateNewPostText={props.updateNewPostText}/>}/>
+
+                         //заменили закоменченные выше два метода на один dispatch
+                         // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
+
+                     />}/>
+            </Routes>
+          </div>
+        </div>
+      </BrowserRouter>)
 }
 
 export default App;
