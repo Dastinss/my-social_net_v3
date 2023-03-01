@@ -19,18 +19,18 @@ const App = ( props ) => {
             <Routes>
               <Route path="/dialogs"
                      // element={<Dialogs store={props.store} // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
-                     element={<DialogsContainer store={props.store}
-                     />}/>
+                     // element={<DialogsContainer store={props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
+                     element={<DialogsContainer />}/>
               <Route path="/profile"
-                     element={<Profile store = {props.store}
+                     // element={<Profile store = {props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
+
                          // profilePage={props.state.profilePage} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
                          // addPost={props.addPost}
                          // updateNewPostText={props.updateNewPostText}/>}/>
 
                          //заменили закоменченные выше два метода на один dispatch
                          // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
-
-                     />}/>
+                     element={<Profile />}/>
             </Routes>
           </div>
         </div>

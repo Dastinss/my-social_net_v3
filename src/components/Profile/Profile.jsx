@@ -10,7 +10,7 @@ const Profile = (props) => { // компонента просто рендери
         <div>
             <ProfileInfo/>
             <MyPostsContainer
-                store = {props.store}
+                // store = {props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
                 // posts={props.profilePage.posts} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
                 // newPostText={props.profilePage.newPostText} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
                 // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer

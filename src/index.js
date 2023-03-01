@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 // import store from "./redux/store"; // закоментили после добавления redux
 import store from "./redux/redux-store";
 import './index.css';
+import StoreContext, { Provider } from "./StoreContext";
 // import {addPost, updateNewPostText} from "./redux/state";
 
 // все что ниже перенесли из index.js и возвращаем туда в виде ф-ции rerenderEnrireTree для того ,чтобы перерисвывать каждый раз все дерево и не было циклической ссылки (см. уроу № 33. Уроки React JS)
@@ -16,12 +17,15 @@ const root = ReactDOM.createRoot( document.getElementById( 'root' ) ); // ВОТ
 let rerenderEnrireTree = ( state ) => {
     root.render(
         <React.StrictMode>
-            {/*<App state={state} //везде заменили state на store._state, а далее на getState () т.к. напрямую к приватному св-ву обращаться не можем*/}
-            {/*     addPost={store.addPost.bind(store)} // отдавая свой метод кому то и хотим, чтобы владелец этого метода сохранился, мы должны этот метод забендить (связать через bind) с владельцем этого метода поэтому стоит два раза store*/}
-            {/*     updateNewPostText={store.updateNewPostText.bind(store)}/>*/}
+            <Provider store={store}>
+                {/*<App state={state} //везде заменили state на store._state, а далее на getState () т.к. напрямую к приватному св-ву обращаться не можем*/}
+                {/*     addPost={store.addPost.bind(store)} // отдавая свой метод кому то и хотим, чтобы владелец этого метода сохранился, мы должны этот метод забендить (связать через bind) с владельцем этого метода поэтому стоит два раза store*/}
+                {/*     updateNewPostText={store.updateNewPostText.bind(store)}/>*/}
 
-            {/*//заменили закоменченные выше два метода на один dispatch*/}
-            <App state={state} dispatch={store.dispatch.bind( store )} store={store}/>
+                {/*//заменили закоменченные выше два метода на один dispatch*/}
+                {/*<App state={state} dispatch={store.dispatch.bind( store )} store={store}/> // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext т.е. дали доступ store ко всем компонентам внутри App*/}
+                <App/>
+            </Provider>
         </React.StrictMode>
     );
 }
@@ -37,5 +41,5 @@ reportWebVitals();
 
 store.subscribe( () => {
     let state = store.getState();
-    rerenderEnrireTree(state);
+    rerenderEnrireTree( state );
 } );
