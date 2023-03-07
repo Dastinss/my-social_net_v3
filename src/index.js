@@ -7,7 +7,8 @@ import reportWebVitals from './reportWebVitals';
 // import store from "./redux/store"; // закоментили после добавления redux
 import store from "./redux/redux-store";
 import './index.css';
-import StoreContext, { Provider } from "./StoreContext";
+import { Provider } from "react-redux";
+// import StoreContext, { Provider } from "./StoreContext"; // удалил урок 45 компоненту StoreContext после установки библиотеки react-redux
 // import {addPost, updateNewPostText} from "./redux/state";
 
 // все что ниже перенесли из index.js и возвращаем туда в виде ф-ции rerenderEnrireTree для того ,чтобы перерисвывать каждый раз все дерево и не было циклической ссылки (см. уроу № 33. Уроки React JS)
