@@ -15,7 +15,7 @@ import { Provider } from "react-redux";
 // до 35 урока было все в отдельном файле render.js, после чего перенесли все в index.js (точнее вернули все туда)
 
 const root = ReactDOM.createRoot( document.getElementById( 'root' ) ); // ВОТ ЭТА СТРОКА - ее скопировал с каментов с урока 34, т.к. біла ошибка изза обновления
-let rerenderEnrireTree = ( state ) => {
+//let rerenderEnrireTree = ( state ) => { // убрали перерисовку в уроке 47 после того как в уроке 46 добавили connect, который внутри себя сам делает ЕДИНОЖДЫ ОТРИСОВКУ
     root.render(
         <React.StrictMode>
             <Provider store={store}>
@@ -29,18 +29,20 @@ let rerenderEnrireTree = ( state ) => {
             </Provider>
         </React.StrictMode>
     );
-}
+
+//}
 
 // <App state={state} addPost={(message)=>{alert('Hi, I am only dump componennt' + message)}}/>
 
-rerenderEnrireTree( store.getState() ); // тут не бандим bind, поскольку вызываем ф-цию от стора, а не посылаем ее куда то как addPost или updateNewPostText
+// убрали перерисовку в уроке 47 после того как в уроке 46 добавили connect, который внутри себя сам делает перерисовку
+//rerenderEnrireTree( store.getState() ); // тут не бандим bind, поскольку вызываем ф-цию от стора, а не посылаем ее куда то как addPost или updateNewPostText
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-store.subscribe( () => {
-    let state = store.getState();
-    rerenderEnrireTree( state );
-} );
+// store.subscribe( () => { // убрали подписку в уроке 47 после того как в уроке 46 добавили connect, который внутри себя сам содержит локальную подписку
+//     let state = store.getState();
+//     rerenderEnrireTree( state );
+// } );

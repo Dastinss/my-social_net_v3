@@ -4,7 +4,7 @@ import MyPosts from "./MyPosts";
 import { connect } from "react-redux";
 // import StoreContext from "../../../StoreContext"; // закоментили в уроке 45 когда создали контейнерную компоненту SuperMyPostsContainer
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state) => { // запускается эта ф-ция каждый раз когда у нас в стейте происходит изменение и формируется (ретурн) новый объект который сравнивается со старым оььектом
     return {
         posts: state.profilePage.posts,
         newPostText: state.profilePage.newPostText
