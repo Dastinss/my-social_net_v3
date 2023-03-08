@@ -11,16 +11,16 @@ import { connect } from "react-redux";
 //создаем две ф-ции с помощью которых настраиваем наш connect, т.е. коннектим нашу компоненту Диалогс к Стору
 let mapStateToProps = (state) => { //ф-ция задача которой замапить часть стейта в пропсы. к store у нас доступа уже нет, потому обращаемся к state у которого просто берем dialogsPage
     return {
-        dialogsPage: state.dialogsPage
+        dialogsPage: state.dialogsPage // Dialogs перересуйся, если изменится объект dialogsPage
     }
 }
 
 let mapDispatchToProps = (dispatch) => { // настраивает колл беки которые мы будем отправлять в нашу през.компоненту
     return {
-        updateNewMessageBody: () => {
+        sendMessage: () => {
             dispatch( sendMessageCreator() )
         },
-        sendMessage: (body) => {
+        updateNewMessageBody: (body) => {
             dispatch( updateNewMessageBodyCreator( body ) )
         },
 

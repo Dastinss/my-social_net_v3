@@ -14,30 +14,37 @@ let initialState = { // одноразовый объект, стартовые 
 };
 
 const profileReducer = ( state = initialState, action ) => { // перенесли из store.js для реализации теории reducer урок 41
+
     switch (action.type) {
         case ADD_POST: {
             let newPost = {
                 id: 5,
                 message: state.newPostText,
-                likelikesCount: 0
+                likesCount: 0
             };
-            let stateCopy = { ...state }//делаем копию стейта, поскольку не имеем права менять исходник с\но правилу имьютабельности
+            return {
+                ...state,
+                posts: [...state.posts, newPost],
+                newPostText: ''
+            };//делаем копию стейта, поскольку не имеем права менять исходник с\но правилу имьютабельности
             // state.posts.push( newPost ); // законектили в уроке 47 когда начали создавать копии см.ниже // ранее заменили this._state.profilePage просто не state, тк это нам пришло как составная часть state - см.(state, action)
-            stateCopy.posts = [...state.posts] //делаем копию массива из которого мы доставем эллементы, поскольку не имеем права менять исходник с\но правилу имьютабельности
-            stateCopy.posts.push( newPost ); // пушим уже в копию, а не в исходник
+            // stateCopy.posts = [...state.posts] //делаем копию массива из которого мы доставем эллементы, поскольку не имеем права менять исходник с\но правилу имьютабельности
+            // stateCopy.posts.push( newPost ); // пушим уже в копию, а не в исходник
             // state.newPostText = ''; // законектили в уроке 47 когда начали создавать копии см.выше
-            stateCopy.newPostText = ''; //
+            // stateCopy.newPostText = ''; // упростили
             // return state;
-            return stateCopy;
+            // return stateCopy;// упростили
         }
 
         case UPDATE_NEW_POST_TEXT: {
-            let stateCopy = { ...state }
-            // state.newPostText = action.newText; // законектили в уроке 47 когда начали создавать копии см.вЫше
-            stateCopy.posts = [...state.posts];
-            stateCopy.newPostText = action.newPostText; // пушим уже в копию, а не в исходник
-            // return state;
-            return stateCopy;
+            return {
+                ...state,
+                newPostText: action.newText
+                // state.newPostText = action.newText; // законектили в уроке 47 когда начали создавать копии см.вЫше
+                // stateCopy.newPostText = action.newPostText; // пушим уже в копию, а не в исходник
+                // return state;
+                // return stateCopy;  // упростили, удалили stateCopy и сразу вызвали элемент
+            }
         }
         default:
             return state;

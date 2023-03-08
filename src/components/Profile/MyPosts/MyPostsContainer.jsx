@@ -11,7 +11,7 @@ let mapStateToProps = (state) => { // запускается эта ф-ция к
     }
 }
 
-let mapDispatchToProps = ( dispatch ) => {
+const mapDispatchToProps = ( dispatch ) => {
     return {
         updateNewPostText: ( text ) => {
             let action = updateNewPostTextActionCreator( text );
