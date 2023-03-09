@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 import './App.css';
 import Header from './components/Header/Header';
 import Navbar from './components/Navbar/Navbar';
@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import state from "./redux/store";
 import store from "./redux/store";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
+ import Users from "./components/Users/Users";
 
 const App = ( props ) => {
   return (
@@ -31,6 +32,8 @@ const App = ( props ) => {
                          //заменили закоменченные выше два метода на один dispatch
                          // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
                      element={<Profile />}/>
+                <Route path="/users"
+                       element={<Users/>}/>
             </Routes>
           </div>
         </div>
