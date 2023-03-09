@@ -9,6 +9,7 @@ import state from "./redux/store";
 import store from "./redux/store";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
  import Users from "./components/Users/Users";
+ import UsersContainer from "./components/Users/UsersContainer";
 
 const App = ( props ) => {
   return (
@@ -33,7 +34,7 @@ const App = ( props ) => {
                          // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
                      element={<Profile />}/>
                 <Route path="/users"
-                       element={<Users/>}/>
+                       element={<UsersContainer/>}/>
             </Routes>
           </div>
         </div>
