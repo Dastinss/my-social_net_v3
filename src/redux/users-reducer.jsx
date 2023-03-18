@@ -16,7 +16,7 @@ const usersReducer = ( state = initialState, action ) => {
                     ...state,
                     // users: [...state.users] - создаем копию, но лучше делать через мар, т.к. нам нужно изменить только один обїект, а вытащить его проще через мар
                     users: state.users.map( u => {
-                        if (u.id === action.userID) {
+                        if (u.id === action.userId) {
                             return { ...u, followed : true } // если ID совпадает, то возвращаем копию обекта, если не совпадает - то возвращаем сам обїект
                         }
                         return u;
@@ -27,7 +27,7 @@ const usersReducer = ( state = initialState, action ) => {
                 return {
                     ...state,
                     users: state.users.map ( u => {
-                        if (u.id === action.userID) {
+                        if (u.id === action.userId) {
                             return { ...u, followed: false }
                         }
                         return u;
@@ -44,8 +44,8 @@ const usersReducer = ( state = initialState, action ) => {
         }
     };
 
-export const followAC = ( userID ) => ({ type: FOLLOW, userID }); // AC = ActionCreator ф-ция которая формирует и возвращает action
-export const unfollowAC = ( userID ) => ({ type: UNFOLLOW, userID });
+export const followAC = ( userId ) => ({ type: FOLLOW, userId }); // AC = ActionCreator ф-ция которая формирует и возвращает action
+export const unfollowAC = ( userId ) => ({ type: UNFOLLOW, userId });
 export const setUsersAC = ( users ) => ({ type: SET_USERS, users });
 
 export default usersReducer;
