@@ -6,14 +6,20 @@ import axios from "axios";
 import userPhoto from '../../assets/images/user.png';
 
 class Users extends React.Component { // без extends React.Component с этой компонентой React не сможет взаимодействовать
-    constructor( props ) {
-        super( props );
+    // constructor( props ) { // закоментили в уроке 53 когда перенесли запрос ajax в  componentDidMount
+    //     super( props );
+    //     axios.get( 'https://social-network.samuraijs.com/api/1.0/users' ).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+    //         this.props.setUsers( response.data.items );
+    //     } );
+    // };
+
+    componentDidMount() {
         axios.get( 'https://social-network.samuraijs.com/api/1.0/users' ).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
             this.props.setUsers( response.data.items );
         } );
     }
 
-    render() { // именно метод render возвращает JSX. props сюда не приходят
+    render() { // обязательный метод, т.к. именно метод render возвращает JSX. props сюда не приходят
         return <div>
             {
                 this.props.users.map( u => <div key={u.id}>
