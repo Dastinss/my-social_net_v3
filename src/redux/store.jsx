@@ -13,7 +13,7 @@ let store = {  // у объекта  store есть св-во state, котор�
     _state: {
         profilePage: {
             posts: [
-                {id: 1, message: "Hello! How are you?", likesCount: 0},
+                {id: 1, message: "Hello! How are you, guy?", likesCount: 0},
                 {id: 2, message: "It's my first post", likesCount: 20},
                 {id: 3, message: "BlaBla", likesCount: 11},
                 {id: 4, message: "DaDa", likesCount: 31},
