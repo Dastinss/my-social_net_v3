@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from "./users.module.css";
 import userPhoto from "../../assets/images/user.png";
+import { NavLink } from "react-router-dom";
 
 let Users = ( props ) => {
 
@@ -30,8 +31,11 @@ let Users = ( props ) => {
             props.users.map( u => <div key={u.id}>
                 <span>
                     <div>
-                        <img src={u.photos.small !== null ? u.photos.small : userPhoto} className={styles.usersPhoto}/>
-                    </div>
+                        <NavLink to = {'/profile/'+ u.id} > {/* это как тег <a> c доп инкапсулированной логикой, делаем так ,чтобы при клике на иконку добавлялся выбранный контакт в  */}
+                            <img src={u.photos.small !== null ? u.photos.small : userPhoto}
+                                 className={styles.usersPhoto}/>
+                        </NavLink>
+                        </div>
                     <div>
                         {u.followed
                             ? <button onClick={() => {

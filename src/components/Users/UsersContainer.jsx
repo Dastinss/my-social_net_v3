@@ -1,5 +1,4 @@
 // контейнерная компонента, задача которой общаться со стейтом с помощью mstp & mdtp. Брать из стора нужніе данніе, коллбеки и прокидывать их в нашу презент.компоненту Users c помощью коннекта.
-
 import React from 'react';
 import { connect } from 'react-redux';
 import usersReducer, {
@@ -12,7 +11,6 @@ import usersReducer, {
 } from '../../redux/users-reducer';
 import axios from 'axios';
 import Users from './Users';
-import preloader from './../../assets/images/loader2.svg';
 import Preloader from "../Common/Preloader/Preloader";
 
 //Это классовая компонента!!! Работет через колл беки, берет все время у пропсов что то

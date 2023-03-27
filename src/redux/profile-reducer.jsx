@@ -2,6 +2,7 @@ import state from "./store";
 
 const ADD_POST = 'ADD-POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
+const SET_USER_PROFILE = 'SET_USER_PROFILE';
 
 let initialState = { // одноразовый объект, стартовые данные
     posts: [
@@ -10,7 +11,8 @@ let initialState = { // одноразовый объект, стартовые 
         { id: 3, message: "BlaBla", likesCount: 11 },
         { id: 4, message: "DaDa", likesCount: 31 },
     ],
-    newPostText: 'it-kamasutra.com' // вводим по умолчанию в textarea - типа хардкодим ее (урок 34)
+    newPostText: 'it-kamasutra.com', // вводим по умолчанию в textarea - типа хардкодим ее (урок 34)
+    profile: null
 };
 
 const profileReducer = ( state = initialState, action ) => { // перенесли из store.js для реализации теории reducer урок 41
@@ -46,6 +48,14 @@ const profileReducer = ( state = initialState, action ) => { // перенесл
                 // return stateCopy;  // упростили, удалили stateCopy и сразу вызвали элемент
             }
         }
+
+        case SET_USER_PROFILE: {
+            return {
+                ...state,
+                profile: action.profile
+            }
+
+        }
         default:
             return state;
 
@@ -70,7 +80,7 @@ const profileReducer = ( state = initialState, action ) => { // перенесл
 
 //перенесли с store.js
 export const addPostActionCreator = () => ({ type: ADD_POST });
-
+export const setUserProfile = ( profile ) => ({ type: SET_USER_PROFILE, profile }); //ф-ция которая возвращает нам обьект - action, в котором инкапсулированы все данные, чтобы редьюсер получил этот action и применил эти изменения на свой стейт
 export const updateNewPostTextActionCreator = ( text ) => (
     { type: UPDATE_NEW_POST_TEXT, newText: text }
 );
