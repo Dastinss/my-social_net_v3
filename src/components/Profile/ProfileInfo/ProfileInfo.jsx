@@ -2,7 +2,7 @@ import React from 'react';
 import s from './ProfileInfo.module.css';
 import Preloader from "../../Common/Preloader/Preloader";
 
-const ProfileInfo = ( props ) => {
+const ProfileInfo = ( props ) => { // это презентационная компонента
     if (!props.profile) { // !props.profile=если профайла нет
         return <Preloader/> //запускаем крутилку
     }

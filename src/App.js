@@ -23,7 +23,7 @@ const App = ( props ) => {
                             // element={<Dialogs store={props.store} // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
                             // element={<DialogsContainer store={props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
                                element={<DialogsContainer/>}/>
-                        <Route path="/profile/*" // добавил /* из комментов к уроку 59, т.к. без этого не отображался корректно добавляемый user
+                        <Route path="/profile/:userId?" // после урока 59 добавил /* в Route path="/profile/*" из комментов к уроку 59, т.к. без этого не отображался корректно добавляемый user
                             // element={<Profile store = {props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
 
                             // profilePage={props.state.profilePage} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer

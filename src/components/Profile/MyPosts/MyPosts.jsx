@@ -13,7 +13,7 @@ const MyPosts = (props) => {
     //     {id: 4, message: "DaDa", likesCount: 31},
     // ]
 
-    let postsElements = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount}/>);
+    let postsElements = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount} key={p.id}/>); // добавил САМ!!! key={p.id}, т.к. ругалась система!!! УРА!!!))
 
     let newPostElement = React.createRef() // єто нужно запомнить, т.е. это внутренняя примочка Реакта. Делаем ссылку на добавление в дальнейшем Поста из ТехтЭриа
 
