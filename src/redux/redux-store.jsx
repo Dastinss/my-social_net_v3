@@ -3,12 +3,14 @@ import profileReducer from "./profile-reducer";
 import dialogsReducer from "./dialogs-reducer";
 import sidebarReducer from "./sidebar-reducer";
 import usersReducer from "./users-reducer";
+import authReducer from "./auth-reducer";
 
 let reducers = combineReducers({ // єто ф-ция, которая соединяет четыре наших редьюсера (т.е. четыре ВЕТКИ нашего стейта , т.е. св-ва каждое из которыъ яв-ся методом), т.е. которой мы передаем объект (ключ: значение)
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
     sidebar: sidebarReducer,
-    usersPage: usersReducer // ветка usersPage обслуживается usersReducer_ом
+    usersPage: usersReducer, // ветка usersPage обслуживается usersReducer_ом
+    auth: authReducer
 });
 
 let store = createStore(reducers); // создаем редаксовский стор с помощью этой ф-ции которой передаем закомбайененные редьюсеры
