@@ -12,6 +12,8 @@ import usersReducer, {
 import axios from 'axios';
 import Users from './Users';
 import Preloader from "../Common/Preloader/Preloader";
+import { userAPI } from "../../api/api";
+
 
 //Это классовая компонента!!! Работет через колл беки, берет все время у пропсов что то
 // (которые приходят из mapDispatchToProps в UsersContainer.jsx). Сделали класс компоненту из функциональной , которую удалили в уроке 53
@@ -24,29 +26,37 @@ class UsersContainer extends React.Component { // без extends React.Component
     // };
     componentDidMount() { // метод жизненного цикла компоненты. в этом методе НУЖНО делать все сайд=эффекты. Компонента монтирует страничку только один раз
         this.props.toggleFetching( true );
-        axios.get( `https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}` ).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
-            this.props.toggleFetching( false );
-            this.props.setUsers( response.data.items );
-            this.props.setTotalUsersCount( response.data.totalCount ); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
-        } );
+        // axios.get( `https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`, // закоментил в уроке 63 когда вынесли запрос этот в отдельную компоненту api уровня DAL
+        //     {
+        //         withCredentials: true
+        //     } )
+        userAPI.getUsers(this.props.currentPage, this.props.pageSize).then( data => { // импортируем ф-цию с запросом с api
+                this.props.toggleFetching( false );
+                this.props.setUsers( data.items );
+                this.props.setTotalUsersCount( data.totalCount ); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
+            } );
     }
 
     onPageChanger = ( pageNumber ) => { //вынесли сюда ф-цию по кликанию на страницах (12345), точнее создали метод, т.к. это классовая компонента
         this.props.setCurrentPage( pageNumber );
         this.props.toggleFetching( true );
-        axios.get( `https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}` ).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
-            this.props.toggleFetching( false );
-            this.props.setUsers( response.data.items );
-        } );
+        // axios.get( `https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`, // закоментил в уроке 63 когда вынесли запрос этот в отдельную компоненту api уровня DAL
+        //     {
+        //         withCredentials: true
+        //     } )
+        userAPI.getUsers(pageNumber, this.props.pageSize).then( data => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+                this.props.toggleFetching( false );
+                this.props.setUsers( data.items );
+            } );
     }
 
     render() { // обязательный метод, т.к. именно метод render возвращает JSX. props сюда не приходят. ЭТО делает Реакт в ПЕРВУЮ очередь - сначала рисуется НИЧЕГО :)
 
         return <>
-            {this.props.isFetching ? <Preloader /> : null}
-                {/*// <div> Перенеслм круилку в отдельную компонету Preloader/!*если данные получаются, то отображаем картинку-крутилку*!/*/}
-                {/*//     <img src={preloader} />*/}
-                {/*// </div>*/}
+            {this.props.isFetching ? <Preloader/> : null}
+            {/*// <div> Перенеслм круилку в отдельную компонету Preloader/!*если данные получаются, то отображаем картинку-крутилку*!/*/}
+            {/*//     <img src={preloader} />*/}
+            {/*// </div>*/}
             <Users
                 totalUsersCount={this.props.totalUsersCount} // передаем в Users только то, что ей нужно для того, чтобі она могла отрисоваться. ЧтобЫ достучаться к Users, нужно сначала достучаться к UsersContainer
                 pageSize={this.props.pageSize}
@@ -71,7 +81,7 @@ let mapStateToProps = ( state ) => { //ф-ция которая возвраща
 }
 
 export default connect( mapStateToProps,
-    {follow,unfollow,setUsers,setCurrentPage,setTotalUsersCount,toggleFetching} )( UsersContainer );
+    { follow, unfollow, setUsers, setCurrentPage, setTotalUsersCount, toggleFetching } )( UsersContainer );
 
 //закоментили less # 58, т.к. перенесли в connect эту ф-цию mapDispatchToProps, не как ф-цию, а как объекты ,которые она содержит одновременно зарефакторив в usersReducer то, но что ссылается колбеки с этой "удаленной" ф-ции
 // let mapDispatchToProps = ( dispatch ) => { //ф-ция которая возвращает обьект, передается в connect, кот ее вызывает. приходит из react-redux библиотеки, задача которой скрыть нам store, subscribe, dispatch, т.е. упрощает єтот мех=зм. Она служит для того, чтобы передавать в ф-циональную компоненту Users через пропсы колл-беки (назначение которых общаться со стейтом), т.е. какие то ф-ции, которые она сможет вызывать
@@ -105,5 +115,4 @@ export default connect( mapStateToProps,
 // mapDispatchToProps - ф-ция возвращающая обьект, в котором есть колбеки ,скажем так. Каждый колл бек диспатчит что то по итогу в стор и там что то происходит.
 // Что то там произошло и заново срабатывает ф-ция mapStateToProps
 // connect - библиотека\ф-ция, с помощью которая и скрывают store, subscribe, dispatch
-
 

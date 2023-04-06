@@ -2,6 +2,7 @@ import React from 'react';
 import styles from "./users.module.css";
 import userPhoto from "../../assets/images/user.png";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
 let Users = ( props ) => {
 
@@ -16,11 +17,13 @@ let Users = ( props ) => {
     return <div>
         <div>
             {pages.map( p => {
-                return <span className={props.currentPage === p && styles.selectedPage}
+                // return <span className={props.currentPage === p && styles.selectedPage} // закоментил т.к. выдавала ошибку система с рекомендацией сделать так, как строкой ниже
+                return <span className={props.currentPage === p ? styles.selectedPage : undefined }
                              onClick={( e ) => {
                                  props.onPageChanger( p )
                              }}>{p}</span>
             } )}
+            {/*className={condition && value} {condition ? value : undefined}*/}
             {/*<span>1</span>*/}
             {/*<span className={styles.selectedPage}>2</span>*/}
             {/*<span>3</span>*/}
@@ -31,7 +34,8 @@ let Users = ( props ) => {
             props.users.map( u => <div key={u.id}>
                 <span>
                     <div>
-                        <NavLink to = {'/profile/'+ u.id} > {/* это как тег <a> c доп инкапсулированной логикой, делаем так ,чтобы при клике на иконку добавлялся выбранный контакт в  */}
+                        <NavLink
+                            to={'/profile/' + u.id}> {/* это как тег <a> c доп инкапсулированной логикой, делаем так ,чтобы при клике на иконку добавлялся выбранный контакт в  */}
                             <img src={u.photos.small !== null ? u.photos.small : userPhoto}
                                  className={styles.usersPhoto}/>
                         </NavLink>
@@ -39,24 +43,46 @@ let Users = ( props ) => {
                     <div>
                         {u.followed
                             ? <button onClick={() => {
+
+                                axios.delete( `https://social-network.samuraijs.com/api/1.0/unfollow/${u.id}`, { //НЕ принимает второй параметр - раскажут позднее. Вторым параметром идет параметр настройки
+                                    withCredentials: true,
+                                    headers: {
+                                        'API-KEY': 'a7ac1bc5-0d23-4742-ab18-200ee19c5490'
+                                    } // добавляем обязательный ключ доступа с моего аккаунта на сайте камасутра, иначе не могу фоловить/анфоловить
+                                } ) //вторым параметром почетому передаем пустой обьект - раскажут позднее
+                                    .then( response => {
+                                        if (response.data.resultCode == 0) {
+                                            props.unfollow( u.id );
+                                        }
+                                    } );
+
                                 props.unfollow( u.id )
                             }}>Unfollow</button>
                             : <button onClick={() => {
-                                props.follow( u.id )
-                            }}>Follow</button>
-                        }
-                    </div>
+                                axios.post( `https://social-network.samuraijs.com/api/1.0/follow/${u.id}`, {}, {
+                                    withCredentials: true,
+                                    headers: {
+                                        'API-KEY': 'a7ac1bc5-0d23-4742-ab18-200ee19c5490'
+                                    } // добавляем обязательный ключ доступа с моего аккаунта на сайте камасутра, иначе не могу фоловить/анфоловить
+                                } ) //вторым параметром почетому передаем пустой обьект - раскажут позднее
+                                    .then( response => {
+                                        if (response.data.resultCode == 0) {
+                                            props.follow( u.id );
+                                        }
+                                    } );
+                            }}> Follow </button>}
+                        </div>
                 </span>
                 <span>
                     <span>
                         <div>{u.name}</div>
                         <div>{u.status}</div>
                     </span>
-                    <span>
+                <span>
                         <div>{'u.location.country'}</div>
                         <div>{'u.location.city'}</div>
                     </span>
-                </span>
+            </span>
             </div> )
         }
     </div>
