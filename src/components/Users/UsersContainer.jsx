@@ -8,6 +8,7 @@ import usersReducer, {
     setTotalUsersCount,
     setUsers,
     toggleFetching,
+    toggleFollowingProgress,
 } from '../../redux/users-reducer';
 import axios from 'axios';
 import Users from './Users';
@@ -31,10 +32,10 @@ class UsersContainer extends React.Component { // без extends React.Component
         //         withCredentials: true
         //     } )
         userAPI.getUsers(this.props.currentPage, this.props.pageSize).then( data => { // импортируем ф-цию с запросом с api
-                this.props.toggleFetching( false );
-                this.props.setUsers( data.items );
-                this.props.setTotalUsersCount( data.totalCount ); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
-            } );
+            this.props.toggleFetching( false );
+            this.props.setUsers( data.items );
+            this.props.setTotalUsersCount( data.totalCount ); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
+        } );
     }
 
     onPageChanger = ( pageNumber ) => { //вынесли сюда ф-цию по кликанию на страницах (12345), точнее создали метод, т.к. это классовая компонента
@@ -45,9 +46,9 @@ class UsersContainer extends React.Component { // без extends React.Component
         //         withCredentials: true
         //     } )
         userAPI.getUsers(pageNumber, this.props.pageSize).then( data => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
-                this.props.toggleFetching( false );
-                this.props.setUsers( data.items );
-            } );
+            this.props.toggleFetching( false );
+            this.props.setUsers( data.items );
+        } );
     }
 
     render() { // обязательный метод, т.к. именно метод render возвращает JSX. props сюда не приходят. ЭТО делает Реакт в ПЕРВУЮ очередь - сначала рисуется НИЧЕГО :)
@@ -65,6 +66,8 @@ class UsersContainer extends React.Component { // без extends React.Component
                 users={this.props.users}
                 follow={this.props.follow}
                 unfollow={this.props.unfollow}
+                toggleFollowingProgress={this.props.toggleFollowingProgress}
+                followingInProgress={this.props.followingInProgress}
             />
         </>
     }
@@ -76,12 +79,13 @@ let mapStateToProps = ( state ) => { //ф-ция которая возвраща
         pageSize: state.usersPage.pageSize,
         totalUsersCount: state.usersPage.totalUsersCount,
         currentPage: state.usersPage.currentPage, //чтобы наша компонента в пропсах получила это значение
-        isFetching: state.usersPage.isFetching
+        isFetching: state.usersPage.isFetching,
+        followingInProgress: state.usersPage.followingInProgress
     }
 }
 
 export default connect( mapStateToProps,
-    { follow, unfollow, setUsers, setCurrentPage, setTotalUsersCount, toggleFetching } )( UsersContainer );
+    { follow, unfollow, setUsers, setCurrentPage, setTotalUsersCount, toggleFetching, toggleFollowingProgress } )( UsersContainer ); // в пропсы приходит не сам АС, коннект из этого АС сам создаст колл бек. который внутри сам задиспатчит то, что вернет АС
 
 //закоментили less # 58, т.к. перенесли в connect эту ф-цию mapDispatchToProps, не как ф-цию, а как объекты ,которые она содержит одновременно зарефакторив в usersReducer то, но что ссылается колбеки с этой "удаленной" ф-ции
 // let mapDispatchToProps = ( dispatch ) => { //ф-ция которая возвращает обьект, передается в connect, кот ее вызывает. приходит из react-redux библиотеки, задача которой скрыть нам store, subscribe, dispatch, т.е. упрощает єтот мех=зм. Она служит для того, чтобы передавать в ф-циональную компоненту Users через пропсы колл-беки (назначение которых общаться со стейтом), т.е. какие то ф-ции, которые она сможет вызывать
@@ -115,4 +119,3 @@ export default connect( mapStateToProps,
 // mapDispatchToProps - ф-ция возвращающая обьект, в котором есть колбеки ,скажем так. Каждый колл бек диспатчит что то по итогу в стор и там что то происходит.
 // Что то там произошло и заново срабатывает ф-ция mapStateToProps
 // connect - библиотека\ф-ция, с помощью которая и скрывают store, subscribe, dispatch
-

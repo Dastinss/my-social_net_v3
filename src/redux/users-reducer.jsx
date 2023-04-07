@@ -7,13 +7,15 @@ const SET_USERS = 'SET_USERS';
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_CURRENT_USERS_COUNT = 'SET_CURRENT_USERS_COUNT';
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'; //меняем значения картинки-крутилки (лоадер)
+const TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS'; //меняем значения кнопки follow/unfollow
 
 let initialState = {
     users: [], // в state есть пустой массив в нем пользователи кот счас нет и которых мы запрашиваем с сервера и потом сюда сетаем
     pageSize: 5, // захардкодили количество страниц
     totalUsersCount: 0, // мы не знаем сколько юзеров, пока не уйдет запрос на сервер и пока мы не узнаем ответ
     currentPage: 1, // текущая страница (которая подсвечивается среди прочихЖ 12345)
-    isFetching: true // состояние загруженности страницы (крутилка)
+    isFetching: true, // состояние загруженности страницы (крутилка)
+    followingInProgress: [] // состояние кнопки follow/unfollow
 };
 
 const usersReducer = ( state = initialState, action ) => {
@@ -56,7 +58,16 @@ const usersReducer = ( state = initialState, action ) => {
         }
 
         case TOGGLE_IS_FETCHING: {
-            return { ...state, isFetching: action.isFetching }// меняем currentPage на тот Page который сидит в action
+            return { ...state, isFetching: action.isFetching }
+        }
+
+        case TOGGLE_IS_FOLLOWING_PROGRESS: {
+            return {
+                ...state,
+                followingInProgress: action.isFetching
+                    ? [...state.followingInProgress, action.userId]
+                    : state.followingInProgress.filter( id => id != action.userId ) // в редьюсере обработка action из AC
+            }
         }
 
         default:
@@ -70,5 +81,6 @@ export const setUsers = ( users ) => ({ type: SET_USERS, users });
 export const setCurrentPage = ( currentPage ) => ({ type: SET_CURRENT_PAGE, currentPage });
 export const setTotalUsersCount = ( totalUsersCount ) => ({ type: SET_CURRENT_USERS_COUNT, count: totalUsersCount });
 export const toggleFetching = ( isFetching ) => ({ type: TOGGLE_IS_FETCHING, isFetching });
+export const toggleFollowingProgress = ( isFetching, userId ) => ({ type: TOGGLE_IS_FOLLOWING_PROGRESS, isFetching, userId }); //диспатчим этот АС в Юзер Контейнерной компоненте
 
 export default usersReducer;

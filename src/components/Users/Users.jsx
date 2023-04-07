@@ -18,7 +18,7 @@ let Users = ( props ) => {
         <div>
             {pages.map( p => {
                 // return <span className={props.currentPage === p && styles.selectedPage} // закоментил т.к. выдавала ошибку система с рекомендацией сделать так, как строкой ниже
-                return <span className={props.currentPage === p ? styles.selectedPage : undefined }
+                return <span className={props.currentPage === p ? styles.selectedPage : undefined}
                              onClick={( e ) => {
                                  props.onPageChanger( p )
                              }}>{p}</span>
@@ -42,8 +42,8 @@ let Users = ( props ) => {
                         </div>
                     <div>
                         {u.followed
-                            ? <button onClick={() => {
-
+                            ? <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => { // если хоть одна ид равна ид пользователя, то ид дизэйблится
+                                props.toggleFollowingProgress( true, u.id ); // диспатчим
                                 axios.delete( `https://social-network.samuraijs.com/api/1.0/unfollow/${u.id}`, { //НЕ принимает второй параметр - раскажут позднее. Вторым параметром идет параметр настройки
                                     withCredentials: true,
                                     headers: {
@@ -54,11 +54,13 @@ let Users = ( props ) => {
                                         if (response.data.resultCode == 0) {
                                             props.unfollow( u.id );
                                         }
+                                        props.toggleFollowingProgress( false, u.id );
                                     } );
 
                                 props.unfollow( u.id )
                             }}>Unfollow</button>
-                            : <button onClick={() => {
+                            : <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => {
+                                props.toggleFollowingProgress( true, u.id );
                                 axios.post( `https://social-network.samuraijs.com/api/1.0/follow/${u.id}`, {}, {
                                     withCredentials: true,
                                     headers: {
@@ -69,6 +71,7 @@ let Users = ( props ) => {
                                         if (response.data.resultCode == 0) {
                                             props.follow( u.id );
                                         }
+                                        props.toggleFollowingProgress( false, u.id );
                                     } );
                             }}> Follow </button>}
                         </div>
