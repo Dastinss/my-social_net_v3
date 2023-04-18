@@ -1,4 +1,4 @@
-// контейнерная компонента, задача которой общаться со стейтом с помощью mstp & mdtp. Брать из стора нужніе данніе, коллбеки и прокидывать их в нашу презент.компоненту Users c помощью коннекта.
+// контейнерная компонента (делает грязную работу), задача которой общаться со стейтом с помощью mstp & mdtp. Брать из стора нужніе данніе, коллбеки и прокидывать их в нашу презент.компоненту Users c помощью коннекта.
 import React from 'react';
 import { connect } from 'react-redux';
 import usersReducer, {
@@ -9,6 +9,7 @@ import usersReducer, {
     setUsers,
     toggleFetching,
     toggleFollowingProgress,
+    getUsersThunkCreator,
 } from '../../redux/users-reducer';
 import axios from 'axios';
 import Users from './Users';
@@ -26,16 +27,18 @@ class UsersContainer extends React.Component { // без extends React.Component
     //     } );
     // };
     componentDidMount() { // метод жизненного цикла компоненты. в этом методе НУЖНО делать все сайд=эффекты. Компонента монтирует страничку только один раз
-        this.props.toggleFetching( true );
         // axios.get( `https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`, // закоментил в уроке 63 когда вынесли запрос этот в отдельную компоненту api уровня DAL
         //     {
         //         withCredentials: true
         //     } )
-        userAPI.getUsers(this.props.currentPage, this.props.pageSize).then( data => { // импортируем ф-цию с запросом с api
-            this.props.toggleFetching( false );
-            this.props.setUsers( data.items );
-            this.props.setTotalUsersCount( data.totalCount ); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
-        } );
+
+        this.props.getUsersThunkCreator(); 
+        // this.props.toggleFetching( true ); // закоментил после переноса в БЛЛ usersReducer, т.к. єто хотя и конейнерная, но все же тупая компонента
+        // userAPI.getUsers(this.props.currentPage, this.props.pageSize).then( data => { // импортируем ф-цию с запросом с api. "Пинаем" API, а потом когда приходит результат, мы пинаем бизнес (this.props.setUsers( data.items ))
+        //     this.props.toggleFetching( false );
+        //     this.props.setUsers( data.items );
+        //     this.props.setTotalUsersCount( data.totalCount ); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
+        // } );
     }
 
     onPageChanger = ( pageNumber ) => { //вынесли сюда ф-цию по кликанию на страницах (12345), точнее создали метод, т.к. это классовая компонента
@@ -85,7 +88,9 @@ let mapStateToProps = ( state ) => { //ф-ция которая возвраща
 }
 
 export default connect( mapStateToProps,
-    { follow, unfollow, setUsers, setCurrentPage, setTotalUsersCount, toggleFetching, toggleFollowingProgress } )( UsersContainer ); // в пропсы приходит не сам АС, коннект из этого АС сам создаст колл бек. который внутри сам задиспатчит то, что вернет АС
+    { follow, unfollow, setUsers,
+        setCurrentPage, setTotalUsersCount, toggleFetching,
+        toggleFollowingProgress, getUsersThunkCreator } )( UsersContainer ); // в пропсы приходит не сам АС, коннект из этого АС сам создаст колл бек. который внутри сам задиспатчит то, что вернет АС
 
 //закоментили less # 58, т.к. перенесли в connect эту ф-цию mapDispatchToProps, не как ф-цию, а как объекты ,которые она содержит одновременно зарефакторив в usersReducer то, но что ссылается колбеки с этой "удаленной" ф-ции
 // let mapDispatchToProps = ( dispatch ) => { //ф-ция которая возвращает обьект, передается в connect, кот ее вызывает. приходит из react-redux библиотеки, задача которой скрыть нам store, subscribe, dispatch, т.е. упрощает єтот мех=зм. Она служит для того, чтобы передавать в ф-циональную компоненту Users через пропсы колл-беки (назначение которых общаться со стейтом), т.е. какие то ф-ции, которые она сможет вызывать

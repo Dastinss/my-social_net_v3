@@ -1,6 +1,8 @@
 // Єто у нас BLL уровень !!! Єто бизнес логика - ОТ НЕЕ ОТТАЛКИВАЕМСЯ!!! UI (Users) - єто уже производная от BLL
 //Все значения в state меняются через редьюсер
 
+import { userAPI } from "../api/api";
+
 const FOLLOW = 'FOLLOW';
 const UNFOLLOW = 'UNFOLLOW';
 const SET_USERS = 'SET_USERS';
@@ -82,5 +84,18 @@ export const setCurrentPage = ( currentPage ) => ({ type: SET_CURRENT_PAGE, curr
 export const setTotalUsersCount = ( totalUsersCount ) => ({ type: SET_CURRENT_USERS_COUNT, count: totalUsersCount });
 export const toggleFetching = ( isFetching ) => ({ type: TOGGLE_IS_FETCHING, isFetching });
 export const toggleFollowingProgress = ( isFetching, userId ) => ({ type: TOGGLE_IS_FOLLOWING_PROGRESS, isFetching, userId }); //диспатчим этот АС в Юзер Контейнерной компоненте
+
+export const getUsersThunkCreator = (currentPage, pageSize) => { // создаем ф-цию thunk thunk ф-ция, это ф-ция, которую создали в редьюсере которая диспатчит обычные астионы , которые делают асинхронную работу.
+                                                                // ф-ция thunk , которая принимает метод dispatch и как все другие санки внутри себя диспатчит другие актионы. Перенесли в уроке 66 из UsersContainer в уровень BLL всю "магию" - комбинацию хитріх штук, а в UI просто дадим users-ов. В Thunk диспатчим обычные астионы, или др словами вызов АС, который возвращает нам астионы
+    return (dispatch) => {
+        dispatch(toggleFetching( true )); // перенесли "крутилку" в уроке 66 в уровень бизнеса из конейнерной компоненты.
+        userAPI.getUsers(currentPage, pageSize).then( data => { // импортируем ф-цию с запросом с api
+            dispatch(toggleFetching( false )); // диспатчим что закончился тогллинг
+            dispatch(setUsers( data.items )); // юзер не из вне вызывается как раньше UsersContainer, а сетаем юзера внутри БЛЛ- бизнес их запросил и бизнес их сетает
+            dispatch(setTotalUsersCount( data.totalCount )); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
+        } );
+    }
+}
+
 
 export default usersReducer;
