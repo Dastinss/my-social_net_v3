@@ -5,11 +5,12 @@ import usersReducer, {
     follow,
     unfollow,
     setCurrentPage,
-    setTotalUsersCount,
-    setUsers,
-    toggleFetching,
+    // setTotalUsersCount, // закоментил в уроке 66 т.к. пеоенесли многое в санки в usersReducer
+    // setUsers, // закоментил в уроке 66 т.к. пеоенесли многое в санки в usersReducer
+    // toggleFetching, // закоментил в уроке 66 т.к. пеоенесли многое в санки в usersReducer
     toggleFollowingProgress,
-    getUsersThunkCreator,
+    getUsersThunkCreator, // ввели в уроке 66 и там же заменили на простой getUsers
+    getUsers,
 } from '../../redux/users-reducer';
 import axios from 'axios';
 import Users from './Users';
@@ -32,7 +33,7 @@ class UsersContainer extends React.Component { // без extends React.Component
         //         withCredentials: true
         //     } )
 
-        this.props.getUsersThunkCreator(); 
+        this.props.getUsers(this.props.currentPage, this.props.pageSize);
         // this.props.toggleFetching( true ); // закоментил после переноса в БЛЛ usersReducer, т.к. єто хотя и конейнерная, но все же тупая компонента
         // userAPI.getUsers(this.props.currentPage, this.props.pageSize).then( data => { // импортируем ф-цию с запросом с api. "Пинаем" API, а потом когда приходит результат, мы пинаем бизнес (this.props.setUsers( data.items ))
         //     this.props.toggleFetching( false );
@@ -42,16 +43,19 @@ class UsersContainer extends React.Component { // без extends React.Component
     }
 
     onPageChanger = ( pageNumber ) => { //вынесли сюда ф-цию по кликанию на страницах (12345), точнее создали метод, т.к. это классовая компонента
-        this.props.setCurrentPage( pageNumber );
-        this.props.toggleFetching( true );
+        this.props.getUsers(pageNumber, this.props.pageSize); // заменил одной строкой в уроке 66 строки ниже
+
+        // this.props.setCurrentPage( pageNumber ); // заменил одной строкой в уроке 66 строки, т.к. єти диспатчи имкапсулированы в санки
+        // this.props.toggleFetching( true ); // заменил одной строкой в уроке 66 строки, т.к. єти диспатчи имкапсулированы в санки
+        //
         // axios.get( `https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`, // закоментил в уроке 63 когда вынесли запрос этот в отдельную компоненту api уровня DAL
         //     {
         //         withCredentials: true
         //     } )
-        userAPI.getUsers(pageNumber, this.props.pageSize).then( data => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
-            this.props.toggleFetching( false );
-            this.props.setUsers( data.items );
-        } );
+        // userAPI.getUsers(pageNumber, this.props.pageSize).then( data => { // заменил одной строкой в уроке 66 строки, т.к. єти диспатчи имкапсулированы в санки //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+        //     this.props.toggleFetching( false ); // заменил одной строкой в уроке 66 строки, т.к. єти диспатчи имкапсулированы в санки
+        //     this.props.setUsers( data.items );// заменил одной строкой в уроке 66 строки, т.к. єти диспатчи имкапсулированы в санки
+        // } );
     }
 
     render() { // обязательный метод, т.к. именно метод render возвращает JSX. props сюда не приходят. ЭТО делает Реакт в ПЕРВУЮ очередь - сначала рисуется НИЧЕГО :)
@@ -69,7 +73,7 @@ class UsersContainer extends React.Component { // без extends React.Component
                 users={this.props.users}
                 follow={this.props.follow}
                 unfollow={this.props.unfollow}
-                toggleFollowingProgress={this.props.toggleFollowingProgress}
+                // toggleFollowingProgress={this.props.toggleFollowingProgress} // закоментил в уроке 66
                 followingInProgress={this.props.followingInProgress}
             />
         </>
@@ -88,9 +92,7 @@ let mapStateToProps = ( state ) => { //ф-ция которая возвраща
 }
 
 export default connect( mapStateToProps,
-    { follow, unfollow, setUsers,
-        setCurrentPage, setTotalUsersCount, toggleFetching,
-        toggleFollowingProgress, getUsersThunkCreator } )( UsersContainer ); // в пропсы приходит не сам АС, коннект из этого АС сам создаст колл бек. который внутри сам задиспатчит то, что вернет АС
+    { follow, unfollow, setCurrentPage, toggleFollowingProgress, getUsers } )( UsersContainer ); // в пропсы приходит не сам АС, коннект из этого АС сам создаст колл бек. который внутри сам задиспатчит то, что вернет АС
 
 //закоментили less # 58, т.к. перенесли в connect эту ф-цию mapDispatchToProps, не как ф-цию, а как объекты ,которые она содержит одновременно зарефакторив в usersReducer то, но что ссылается колбеки с этой "удаленной" ф-ции
 // let mapDispatchToProps = ( dispatch ) => { //ф-ция которая возвращает обьект, передается в connect, кот ее вызывает. приходит из react-redux библиотеки, задача которой скрыть нам store, subscribe, dispatch, т.е. упрощает єтот мех=зм. Она служит для того, чтобы передавать в ф-циональную компоненту Users через пропсы колл-беки (назначение которых общаться со стейтом), т.е. какие то ф-ции, которые она сможет вызывать

@@ -3,6 +3,7 @@ import styles from "./users.module.css";
 import userPhoto from "../../assets/images/user.png";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import { userAPI } from "../../api/api";
 
 let Users = ( props ) => {
 
@@ -42,38 +43,54 @@ let Users = ( props ) => {
                         </div>
                     <div>
                         {u.followed
-                            ? <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => { // если хоть одна ид равна ид пользователя, то ид дизэйблится
-                                props.toggleFollowingProgress( true, u.id ); // диспатчим
-                                axios.delete( `https://social-network.samuraijs.com/api/1.0/unfollow/${u.id}`, { //НЕ принимает второй параметр - раскажут позднее. Вторым параметром идет параметр настройки
-                                    withCredentials: true,
-                                    headers: {
-                                        'API-KEY': 'a7ac1bc5-0d23-4742-ab18-200ee19c5490'
-                                    } // добавляем обязательный ключ доступа с моего аккаунта на сайте камасутра, иначе не могу фоловить/анфоловить
-                                } ) //вторым параметром почетому передаем пустой обьект - раскажут позднее
-                                    .then( response => {
-                                        if (response.data.resultCode == 0) {
-                                            props.unfollow( u.id );
-                                        }
-                                        props.toggleFollowingProgress( false, u.id );
-                                    } );
+                            ? <button disabled={props.followingInProgress
+                                .some( id => id === u.id )}
+                                      onClick={() => {
+                                          props.unfollow( u.id )
+                                      }}> {/*// если хоть одна ид равна ид пользователя, то ид дизэйблится*/}
 
-                                props.unfollow( u.id )
-                            }}>Unfollow</button>
-                            : <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => {
-                                props.toggleFollowingProgress( true, u.id );
-                                axios.post( `https://social-network.samuraijs.com/api/1.0/follow/${u.id}`, {}, {
-                                    withCredentials: true,
-                                    headers: {
-                                        'API-KEY': 'a7ac1bc5-0d23-4742-ab18-200ee19c5490'
-                                    } // добавляем обязательный ключ доступа с моего аккаунта на сайте камасутра, иначе не могу фоловить/анфоловить
-                                } ) //вторым параметром почетому передаем пустой обьект - раскажут позднее
-                                    .then( response => {
-                                        if (response.data.resultCode == 0) {
-                                            props.follow( u.id );
-                                        }
-                                        props.toggleFollowingProgress( false, u.id );
-                                    } );
-                            }}> Follow </button>}
+
+                                {/*//закоментил, т.к перенес в usersReducer*/}
+                                {/*// props.toggleFollowingProgress( true, u.id ); // диспатчим*/}
+                                {/*// userAPI.unfollow( u.id ) // добавил в уроке 66 после того, как перенес обращение на сервер в api*/}
+                                {/*//*/}
+                                {/*//     //закоментил, т.к перенес в api*/}
+                                {/*//     // axios.delete( `https://social-network.samuraijs.com/api/1.0/unfollow/${u.id}`, { //НЕ принимает второй параметр - раскажут позднее. Вторым параметром идет параметр настройки*/}
+                                {/*//     //     withCredentials: true,*/}
+                                {/*//     //     headers: {*/}
+                                {/*//     //         'API-KEY': 'a7ac1bc5-0d23-4742-ab18-200ee19c5490'*/}
+                                {/*//     //     } // добавляем обязательный ключ доступа с моего аккаунта на сайте камасутра, иначе не могу фоловить/анфоловить*/}
+                                {/*//     // } ) //вторым параметром почетому передаем пустой обьект - раскажут позднее*/}
+                                {/*//     .then( response => {*/}
+                                {/*//         if (response.data.resultCode == 0) {*/}
+                                {/*//             props.unfollow( u.id );*/}
+                                {/*//         }*/}
+                                {/*//         props.toggleFollowingProgress( false, u.id );*/}
+                                {/*//     } );*/}
+
+                                Unfollow</button>
+                            : <button disabled={props.followingInProgress.some( id => id === u.id )}
+                                      onClick={() => {
+                                          props.follow( u.id )
+                                      }}>
+                                {/*// props.toggleFollowingProgress( true, u.id );*/}
+                                {/*// userAPI.follow( u.id ) // добавил в уроке 66 после того, как перенес обращение на*/}
+                                {/*сервер в api*/}
+
+                                {/*//закоментил, т.к перенес в api*/}
+                                {/*// axios.post( `https://social-network.samuraijs.com/api/1.0/follow/${u.id}`, {}, {*/}
+                                {/*//     withCredentials: true,*/}
+                                {/*//     headers: {*/}
+                                {/*//         'API-KEY': 'a7ac1bc5-0d23-4742-ab18-200ee19c5490'*/}
+                                {/*//     } // добавляем обязательный ключ доступа с моего аккаунта на сайте камасутра, иначе не могу фоловить/анфоловить*/}
+                                {/*// } ) //вторым параметром почетому передаем пустой обьект - раскажут позднее*/}
+                                {/*// .then( response => {*/}
+                                {/*//     if (response.data.resultCode == 0) {*/}
+                                {/*//         props.follow( u.id );*/}
+                                {/*//     }*/}
+                                {/*//     props.toggleFollowingProgress( false, u.id );*/}
+                                {/*// } );*/}
+                                Follow </button>}
                         </div>
                 </span>
                 <span>

@@ -77,19 +77,20 @@ const usersReducer = ( state = initialState, action ) => {
     }
 };
 
-export const follow = ( userId ) => ({ type: FOLLOW, userId }); // AC = ActionCreator ф-ция которая формирует и возвращает action
-export const unfollow = ( userId ) => ({ type: UNFOLLOW, userId });
+export const followSuccess = ( userId ) => ({ type: FOLLOW, userId }); // AC = ActionCreator ф-ция которая формирует и возвращает action
+export const unfollowSuccess = ( userId ) => ({ type: UNFOLLOW, userId });
 export const setUsers = ( users ) => ({ type: SET_USERS, users });
 export const setCurrentPage = ( currentPage ) => ({ type: SET_CURRENT_PAGE, currentPage });
 export const setTotalUsersCount = ( totalUsersCount ) => ({ type: SET_CURRENT_USERS_COUNT, count: totalUsersCount });
 export const toggleFetching = ( isFetching ) => ({ type: TOGGLE_IS_FETCHING, isFetching });
 export const toggleFollowingProgress = ( isFetching, userId ) => ({ type: TOGGLE_IS_FOLLOWING_PROGRESS, isFetching, userId }); //диспатчим этот АС в Юзер Контейнерной компоненте
 
-export const getUsersThunkCreator = (currentPage, pageSize) => { // создаем ф-цию thunk thunk ф-ция, это ф-ция, которую создали в редьюсере которая диспатчит обычные астионы , которые делают асинхронную работу.
+export const getUsers = (currentPage, pageSize) => { // создаем ф-цию thunk. thunk -ф-ция, это ф-ция, которую создали в редьюсере которая диспатчит обычные астионы , которые делают асинхронную работу.
                                                                 // ф-ция thunk , которая принимает метод dispatch и как все другие санки внутри себя диспатчит другие актионы. Перенесли в уроке 66 из UsersContainer в уровень BLL всю "магию" - комбинацию хитріх штук, а в UI просто дадим users-ов. В Thunk диспатчим обычные астионы, или др словами вызов АС, который возвращает нам астионы
     return (dispatch) => {
         dispatch(toggleFetching( true )); // перенесли "крутилку" в уроке 66 в уровень бизнеса из конейнерной компоненты.
         userAPI.getUsers(currentPage, pageSize).then( data => { // импортируем ф-цию с запросом с api
+            dispatch(setCurrentPage(currentPage)); // добавил по совету из комментариев к видео, хотя Димыч это не делал. Изначально в UsersContainer это было удалено onPageChanger - откуда переносили не было
             dispatch(toggleFetching( false )); // диспатчим что закончился тогллинг
             dispatch(setUsers( data.items )); // юзер не из вне вызывается как раньше UsersContainer, а сетаем юзера внутри БЛЛ- бизнес их запросил и бизнес их сетает
             dispatch(setTotalUsersCount( data.totalCount )); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps
@@ -97,5 +98,32 @@ export const getUsersThunkCreator = (currentPage, pageSize) => { // создае
     }
 }
 
+export const follow = (userId) => { // создаем ф-цию thunk. thunk -ф-ция, это ф-ция, которую создали в редьюсере которая диспатчит обычные астионы , которые делают асинхронную работу.
+
+    return (dispatch) => {
+        dispatch(toggleFollowingProgress( true, userId )); // диспатчим обычный астион
+        userAPI.follow( userId ) // добавил в уроке 66 после того, как перенес обращение на сервер в api
+            .then( response => {
+                if (response.data.resultCode == 0) {
+                    dispatch(followSuccess( userId ));
+                }
+                dispatch(toggleFollowingProgress( false, userId ));
+            } );
+    }
+}
+
+export const unfollow = (userId) => { // создаем ф-цию thunk. thunk -ф-ция, это ф-ция, которую создали в редьюсере которая диспатчит обычные астионы , которые делают асинхронную работу.
+
+    return (dispatch) => {
+        dispatch(toggleFollowingProgress( true, userId )); // диспатчим обычный астион
+        userAPI.unfollow( userId ) // добавил в уроке 66 после того, как перенес обращение на сервер в api
+            .then( response => {
+                if (response.data.resultCode == 0) {
+                    dispatch(unfollowSuccess( userId ));
+                }
+                dispatch(toggleFollowingProgress( false, userId ));
+            } );
+    }
+}
 
 export default usersReducer;
