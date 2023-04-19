@@ -1,4 +1,5 @@
 import state from "./store";
+import { userAPI } from "../api/api";
 
 const ADD_POST = 'ADD-POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
@@ -81,6 +82,11 @@ const profileReducer = ( state = initialState, action ) => { // перенесл
 //перенесли с store.js
 export const addPostActionCreator = () => ({ type: ADD_POST });
 export const setUserProfile = ( profile ) => ({ type: SET_USER_PROFILE, profile }); //ф-ция которая возвращает нам обьект - action, в котором инкапсулированы все данные, чтобы редьюсер получил этот action и применил эти изменения на свой стейт
+export const getUserProfile = ( userId ) => (dispatch) => { // создаем санку - ф-цию, которая принимаем ф-цию диспатч и делает внутри какието ассинхронные операции и различные мелкие астины
+    userAPI.getProfile(userId).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+            dispatch(setUserProfile( response.data ));
+        } );
+}
 export const updateNewPostTextActionCreator = ( text ) => (
     { type: UPDATE_NEW_POST_TEXT, newText: text }
 );

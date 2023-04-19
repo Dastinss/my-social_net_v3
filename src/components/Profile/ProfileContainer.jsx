@@ -2,7 +2,7 @@ import React from 'react';
 import Profile from "./Profile";
 import axios from "axios";
 import { connect } from "react-redux";
-import { setUserProfile } from "../../redux/profile-reducer";
+import { getUserProfile, setUserProfile } from "../../redux/profile-reducer";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 class ProfileContainer extends React.Component { // делаем эту компоненту классовой чтобы иметь возможность сделать запрос
@@ -11,10 +11,12 @@ class ProfileContainer extends React.Component { // делаем эту комп
         if (!userId) {
             userId = 2
         }
-        axios.get( `https://social-network.samuraijs.com/api/1.0/profile/` + userId )
-            .then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
-                this.props.setUserProfile( response.data );
-            } );
+        this.props.getUserProfile(userId); // #67
+        // userAPI.getProfile( userId ) // сделали так, чтобы компонентв не обращалась к ДАЛ уровню, поэтому закоментили
+        //     // axios.get( `https://social-network.samuraijs.com/api/1.0/profile/` + userId ) // перенесли в апи в уроке 67
+        //     .then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+        //         this.props.setUserProfile( response.data );
+        //     } );
     }
 
     render() {  // обязательный метод класс компоненты , который возвращает разметку JSX
@@ -49,4 +51,4 @@ function withRouter( Component ) { // добавил из комментарие
 
 let WithUrlDataContainerComponent = withRouter( ProfileContainer )
 
-export default connect( mapStateToProps, { setUserProfile } )( WithUrlDataContainerComponent );
+export default connect( mapStateToProps, { getUserProfile } )( WithUrlDataContainerComponent );

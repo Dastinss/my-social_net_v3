@@ -1,6 +1,8 @@
 // Єто у нас BLL уровень !!! Єто бизнес логика - ОТ НЕЕ ОТТАЛКИВАЕМСЯ!!! UI (Users) - єто уже производная от BLL
 //Все значения в state меняются через редьюсер
 
+import { authAPI } from "../api/api";
+
 const SET_USER_DATA = 'SET_USER_DATA';
 
 let initialState = {
@@ -26,5 +28,14 @@ const authReducer = ( state = initialState, action ) => {
 };
 
 export const setAuthUserData = ( userId, email, login ) => ({ type: SET_USER_DATA, data: {userId, email, login} }); // AC = ActionCreator ф-ция которая формирует и возвращает обтект action
+export const getAuthUserData = () => (dispatch) => { // thunk делает ассинхронную операцию которая раньше делалсь в компоненте
+    authAPI.me()
+        .then( response => { // подписываемся на этот промис с помощью then
+            if (response.data.resultCode === 0) { //проверка обязательная о том ,что если в респонсе в дате сидит resultCode = 0, то мы залогинены (берем из документации https://social-network.samuraijs.com/docs#auth_me_get инфо )  и только в этом случае мы должны задиспатчить эти авторизационные данные. Возьмем мы их из респонс
+                let { id, email, login } = response.data.data; //делаем деструктуризацию
+                dispatch(setAuthUserData( id, email, login )); // в наш редьюсер придут данніе о том ,кто мы такие. id ставим как в дата в документации разработчика, т.к. если поставить userId  то не подтянется, не заканектися
+            }
+        } );
+}
 
 export default authReducer;
