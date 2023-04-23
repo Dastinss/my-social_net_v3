@@ -3,11 +3,14 @@ import s from './Dialogs.module.css'
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import { sendMessageCreator, updateNewMessageBodyCreator } from "../../redux/dialogs-reducer";
+import * as PropTypes from "prop-types";
+import { Navigate as Redirect} from "react-router-dom";
 
 // let dialogs = [
 //     <DialogItem name = {dialogsData[0].name} id= {dialogsData[0].id}/>,
 //     ..... и тд
 // ]
+
 
 const Dialogs = ( props ) => {
 
@@ -32,6 +35,8 @@ const Dialogs = ( props ) => {
         props.updateNewMessageBody( body );
         // props.store.dispatch(updateNewMessageBodyCreator(body)); // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
     }
+
+    if (!props.isAuth) return <Redirect to = '/login'/>; // у Димыча в уроке 68 стоит не Navigate , а Redirect, поєтому подправил самостоятельно импорт
 
     return (
         <div className={s.dialogs}>

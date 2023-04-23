@@ -11,7 +11,8 @@ import { connect } from "react-redux";
 //создаем две ф-ции с помощью которых настраиваем наш connect, т.е. коннектим нашу компоненту Диалогс к Стору
 let mapStateToProps = (state) => { //ф-ция задача которой замапить часть стейта в пропсы. к store у нас доступа уже нет, потому обращаемся к state у которого просто берем dialogsPage
     return {
-        dialogsPage: state.dialogsPage // Dialogs перересуйся, если изменится объект dialogsPage
+        dialogsPage: state.dialogsPage, // Dialogs перересуйся, если изменится объект dialogsPage
+        isAuth: state.auth.isAuth
     }
 }
 

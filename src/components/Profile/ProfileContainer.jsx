@@ -4,6 +4,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { getUserProfile, setUserProfile } from "../../redux/profile-reducer";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Navigate as Redirect} from "react-router-dom";
 
 class ProfileContainer extends React.Component { // делаем эту компоненту классовой чтобы иметь возможность сделать запрос
     componentDidMount() {
@@ -20,6 +21,8 @@ class ProfileContainer extends React.Component { // делаем эту комп
     }
 
     render() {  // обязательный метод класс компоненты , который возвращает разметку JSX
+       if (!this.props.isAuth) return <Redirect to='/login' /> // урок 68 делаем переадресацию на логин, если мы не залогинились (не показываем страничку вовсе)
+
         return (
             <div>
                 <Profile {...this.props}
@@ -30,7 +33,8 @@ class ProfileContainer extends React.Component { // делаем эту комп
 }
 
 let mapStateToProps = ( state ) => ({
-    profile: state.profilePage.profile
+    profile: state.profilePage.profile,
+    isAuth: state.auth.isAuth
 })
 
 function withRouter( Component ) { // добавил из комментариев к уроку 60, т.к. разбор Димыча устарел: withRouter вшитой в Реакт уже нет. Получается виесто нее создали ф-цию с таким же названием
