@@ -6,13 +6,16 @@ import { sendMessageCreator, updateNewMessageBodyCreator } from "../../redux/dia
 import Dialogs from "./Dialogs";
 // import StoreContext from "../../StoreContext"; // // закоментили в уроке 45 когда создали контейнерную компоненту SuperDialogsContainer
 import { connect } from "react-redux";
+// import { Navigate as Redirect } from "react-router-dom";
+// import { Navigate as Redirect } from "react-router/dist/lib/components";
+import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 
 
 //создаем две ф-ции с помощью которых настраиваем наш connect, т.е. коннектим нашу компоненту Диалогс к Стору
 let mapStateToProps = (state) => { //ф-ция задача которой замапить часть стейта в пропсы. к store у нас доступа уже нет, потому обращаемся к state у которого просто берем dialogsPage
     return {
         dialogsPage: state.dialogsPage, // Dialogs перересуйся, если изменится объект dialogsPage
-        isAuth: state.auth.isAuth
+        // isAuth: state.auth.isAuth // закоментил, т.к. перенес все редиректы в withAuthRedirect - автоматически это происходит в AuthRedirectComponent строка 33
     }
 }
 
@@ -27,9 +30,15 @@ let mapDispatchToProps = (dispatch) => { // настраивает колл бе
 
     }
 }
+let AuthRedirectComponent = withAuthRedirect(Dialogs); // #69 Вызвали HOC c нужным параметром, передав в него нужную компоненту
+
+// let AuthRedirectComponent = (props) => { // // #69 закоментили передав ее в HOC, предварительно создав контейнерную компоненту над Dialogs
+//     if (!this.props.isAuth) return <Redirect to='/login'/> // вставляем редирект , т.е. вернем редирект если мы не авторизованы
+//     return <Dialogs {...props}/>// все пропсы перекидываем в целевую компоненту
+// }
 
 // урок 45 создаем новую контейнерную компоненту в react-redux c помощью комманды connect . при єтом старую выше не удаляем
-const DialogsContainer = connect (mapStateToProps, mapDispatchToProps) (Dialogs); // создали конт компоненту по имени Dialogs внутри которой она рендерит презентационную компоненту, внутрь которой в качестве пропсов передает те св-ва, которые сидят в этих двух обектах
+const DialogsContainer = connect (mapStateToProps, mapDispatchToProps) (AuthRedirectComponent); // // передали контейнерную компоненту, которую построили над Dialogs, заменив ее// ранее создали конт компоненту по имени Dialogs внутри которой она рендерит презентационную компоненту, внутрь которой в качестве пропсов передает те св-ва, которые сидят в этих двух обектах
 
 export default DialogsContainer;
 
