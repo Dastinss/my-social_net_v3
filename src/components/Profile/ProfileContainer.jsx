@@ -6,6 +6,7 @@ import { getUserProfile, setUserProfile } from "../../redux/profile-reducer";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Navigate as Redirect } from "react-router-dom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
+import { compose } from "redux";
 
 class ProfileContainer extends React.Component { // делаем эту компоненту классовой чтобы иметь возможность сделать запрос
     componentDidMount() {
@@ -33,22 +34,29 @@ class ProfileContainer extends React.Component { // делаем эту комп
     }
 }
 
-let AuthRedirectComponent = withAuthRedirect(ProfileContainer); // #69 Вызвали HOC c нужным параметром, передав в него нужную компоненту
-
-// let AuthRedirectComponent = (props) => { // #69 закоментили передав ее в HOC, предварительно создав контейнерную компоненту над ProfileContainer
-//     if (!this.props.isAuth) return <Redirect to='/login'/> // вставляем редирект , т.е. вернем редирект если мы не авторизованы
-//     return <ProfileContainer {...props}/>// все пропсы перекидываем в целевую компоненту
-// }
-
-// let mapStateToPropsForRedirect = ( state ) => ({ # 69 перенесли в withAuthRedirect
-//     isAuth: state.auth.isAuth
-// })
-// AuthRedirectComponent = connect(mapStateToPropsForRedirect) (AuthRedirectComponent) // #69 ад из HOCов... как сказал Димыч - создали еще одну обертку для получения данных
-
 let mapStateToProps = ( state ) => ({
     profile: state.profilePage.profile,
     // isAuth: state.auth.isAuth // #69 закоментил, т.к. создал еще одну "обертку"  mapStateToPropsForRedirect
 })
+
+//СТАЛО
+export default compose(
+    connect ( mapStateToProps, { getUserProfile } ),
+    withRouter, withAuthRedirect
+)(ProfileContainer)
+
+// БЫЛО
+// let AuthRedirectComponent = withAuthRedirect(ProfileContainer); // #69 Вызвали HOC c нужным параметром, передав в него нужную компоненту
+// // let AuthRedirectComponent = (props) => { // #69 закоментили передав ее в HOC, предварительно создав контейнерную компоненту над ProfileContainer
+// //     if (!this.props.isAuth) return <Redirect to='/login'/> // вставляем редирект , т.е. вернем редирект если мы не авторизованы
+// //     return <ProfileContainer {...props}/>// все пропсы перекидываем в целевую компоненту
+// // }
+// // let mapStateToPropsForRedirect = ( state ) => ({ # 69 перенесли в withAuthRedirect
+// //     isAuth: state.auth.isAuth
+// // })
+// // AuthRedirectComponent = connect(mapStateToPropsForRedirect) (AuthRedirectComponent) // #69 ад из HOCов... как сказал Димыч - создали еще одну обертку для получения данных
+// let WithUrlDataContainerComponent = withRouter( AuthRedirectComponent ) // передали контейнерную компоненту, которую построили над ProfileContainer, заменив ее
+// export default connect( mapStateToProps, { getUserProfile } )( WithUrlDataContainerComponent );
 
 
 function withRouter( Component ) { // добавил из комментариев к уроку 60, т.к. разбор Димыча устарел: withRouter вшитой в Реакт уже нет. Получается виесто нее создали ф-цию с таким же названием
@@ -63,10 +71,6 @@ function withRouter( Component ) { // добавил из комментарие
             />
         );
     }
-
     return ComponentWithRouterProp;
 }
 
-let WithUrlDataContainerComponent = withRouter( AuthRedirectComponent ) // передали контейнерную компоненту, которую построили над ProfileContainer, заменив ее
-
-export default connect( mapStateToProps, { getUserProfile } )( WithUrlDataContainerComponent );

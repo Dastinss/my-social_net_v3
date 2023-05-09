@@ -12,12 +12,12 @@ import usersReducer, {
     getUsersThunkCreator, // ввели в уроке 66 и там же заменили на простой getUsers
     getUsers,
 } from '../../redux/users-reducer';
-import axios from 'axios';
+import axios, { defaults } from 'axios';
 import Users from './Users';
 import Preloader from "../Common/Preloader/Preloader";
 import { userAPI } from "../../api/api";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
-
+import { compose } from "redux";
 
 //Это классовая компонента!!! Работет через колл беки, берет все время у пропсов что то
 // (которые приходят из mapDispatchToProps в UsersContainer.jsx). Сделали класс компоненту из функциональной , которую удалили в уроке 53
@@ -34,7 +34,7 @@ class UsersContainer extends React.Component { // без extends React.Component
         //         withCredentials: true
         //     } )
 
-        this.props.getUsers(this.props.currentPage, this.props.pageSize);
+        this.props.getUsers( this.props.currentPage, this.props.pageSize );
         // this.props.toggleFetching( true ); // закоментил после переноса в БЛЛ usersReducer, т.к. єто хотя и конейнерная, но все же тупая компонента
         // userAPI.getUsers(this.props.currentPage, this.props.pageSize).then( data => { // импортируем ф-цию с запросом с api. "Пинаем" API, а потом когда приходит результат, мы пинаем бизнес (this.props.setUsers( data.items ))
         //     this.props.toggleFetching( false );
@@ -44,7 +44,7 @@ class UsersContainer extends React.Component { // без extends React.Component
     }
 
     onPageChanger = ( pageNumber ) => { //вынесли сюда ф-цию по кликанию на страницах (12345), точнее создали метод, т.к. это классовая компонента
-        this.props.getUsers(pageNumber, this.props.pageSize); // заменил одной строкой в уроке 66 строки ниже
+        this.props.getUsers( pageNumber, this.props.pageSize ); // заменил одной строкой в уроке 66 строки ниже
 
         // this.props.setCurrentPage( pageNumber ); // заменил одной строкой в уроке 66 строки, т.к. єти диспатчи имкапсулированы в санки
         // this.props.toggleFetching( true ); // заменил одной строкой в уроке 66 строки, т.к. єти диспатчи имкапсулированы в санки
@@ -92,10 +92,18 @@ let mapStateToProps = ( state ) => { //ф-ция которая возвраща
     }
 }
 
+//СТАЛО
+export default compose(
+    withAuthRedirect,
+    connect( mapStateToProps,
+        { follow, unfollow, setCurrentPage, toggleFollowingProgress, getUsers } )
+)( UsersContainer );
+
 // let withRedirect = withAuthRedirect(UsersContainer) // #69 законектил, т.к. обенрнул ХОКом непосредственно коннект предварительно для редайректинга (чтобі не залогиненный пользователь не мог заходить на страницц юзер) запихиваем контейнерную компоненту в HOC и ее уже отдать внутрь connect
 
-export default withAuthRedirect(connect( mapStateToProps,
-    { follow, unfollow, setCurrentPage, toggleFollowingProgress, getUsers } )( UsersContainer )); // в пропсы приходит не сам АС, коннект из этого АС сам создаст колл бек. который внутри сам задиспатчит то, что вернет АС
+// БЫЛО
+// export default withAuthRedirect(connect( mapStateToProps,
+//     { follow, unfollow, setCurrentPage, toggleFollowingProgress, getUsers } )( UsersContainer )); // в пропсы приходит не сам АС, коннект из этого АС сам создаст колл бек. который внутри сам задиспатчит то, что вернет АС
 
 //закоментили less # 58, т.к. перенесли в connect эту ф-цию mapDispatchToProps, не как ф-цию, а как объекты ,которые она содержит одновременно зарефакторив в usersReducer то, но что ссылается колбеки с этой "удаленной" ф-ции
 // let mapDispatchToProps = ( dispatch ) => { //ф-ция которая возвращает обьект, передается в connect, кот ее вызывает. приходит из react-redux библиотеки, задача которой скрыть нам store, subscribe, dispatch, т.е. упрощает єтот мех=зм. Она служит для того, чтобы передавать в ф-циональную компоненту Users через пропсы колл-беки (назначение которых общаться со стейтом), т.е. какие то ф-ции, которые она сможет вызывать
