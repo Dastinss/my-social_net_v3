@@ -13,7 +13,7 @@ class ProfileStatus extends React.Component { // это классовая ко�
         } );
     }
 
-    deactivateEditMode = () => { // обратный метод, который "переключает назад" режим правок, можно исп-ть еще toggle в даном случае
+    deactivateEditMode () { // обратный метод, который "переключает назад" режим правок, можно исп-ть еще toggle в даном случае
         this.setState( {
             editMode : false
         } );
@@ -24,12 +24,12 @@ class ProfileStatus extends React.Component { // это классовая ко�
             <div>
                 {!this.state.editMode && //если у нас editMode НЕ тру, то мы отобразим ОДНУ дивку
                     <div>
-                        <span onDoubleClick={ this.activateEditMode.bind(this) }>{this.props.status}</span>
+                        <span onDoubleClick={ this.activateEditMode }>{this.props.status}</span> {/* поставили БЕЗ bind , т.к. стоит стрелочная ф-ция fn=()=>*/}
                     </div>
                 }
                 {this.state.editMode && //если у нас editMode тру, то мы отобразим ДРУГУЮ дивку
                     <div>
-                        <input autoFocus={true} onBlur={ this.deactivateEditMode.bind(this) } value={this.props.status}/>
+                        <input autoFocus={true} onBlur={ this.deactivateEditMode.bind(this) } value={this.props.status}/> {/* поставили С bind , т.к. стоит определяющая  ф-ция (fn()  ) */}
                     </div>
                 }
             </div>
