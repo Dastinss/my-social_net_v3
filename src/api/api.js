@@ -28,9 +28,23 @@ export const userAPI = { // создали обьект который соде�
     unfollow( userId ) { // перенес в уроке 66 с Users и убрал все ненужное, что есть в instance вверху
         return instance.delete( `follow/${userId}`)  //НЕ принимает второй параметр - раскажут позднее. Вторым параметром идет параметр настройки
     },
-    getProfile(userId){ // перенесли с ProfileContainer #67
+    getProfile(userId){ // перенесли с ProfileContainer #67, подправил в #73
+        console.warn('Obsolete method. Please profileAPI object.')
+        // return instance.get( `profile/` + userId ); // затер в 73
+        return profileAPI.getProfile(userId);
+    },
+}
+
+export const profileAPI = { // #73 создали обьект (отделили от userAPI), который содержит методы, это упаковка для всех методов для группировки
+    getProfile(userId){
         return instance.get( `profile/` + userId );
     },
+    getStatus(userId){
+        return instance.get( `profile/status/` + userId );
+    },
+    updateStatus (status){
+        return instance.put( `profile/status`, {status: status} ); // отправляе на сервер обьект, который требует документация
+    }
 }
 
 export const authAPI = { // создали обьект который содержит методы, это упаковка для всех методов для группировки

@@ -1,9 +1,10 @@
 import state from "./store";
-import { userAPI } from "../api/api";
+import { profileAPI, userAPI } from "../api/api";
 
 const ADD_POST = 'ADD-POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
+const SET_STATUS = 'SET_STATUS';
 
 let initialState = { // одноразовый объект, стартовые данные
     posts: [
@@ -13,7 +14,8 @@ let initialState = { // одноразовый объект, стартовые 
         { id: 4, message: "DaDa", likesCount: 31 },
     ],
     newPostText: 'it-kamasutra.com', // вводим по умолчанию в textarea - типа хардкодим ее (урок 34)
-    profile: null
+    profile: null,
+    status: '' // #73
 };
 
 const profileReducer = ( state = initialState, action ) => { // перенесли из store.js для реализации теории reducer урок 41
@@ -50,6 +52,13 @@ const profileReducer = ( state = initialState, action ) => { // перенесл
             }
         }
 
+        case SET_STATUS: { // #73 когда придет запрос из сервера мы хотим его засетать
+            return {
+                ...state,
+                status: action.status // приходит новый статус   и мы его сетам в статус
+            }
+        }
+
         case SET_USER_PROFILE: {
             return {
                 ...state,
@@ -82,11 +91,30 @@ const profileReducer = ( state = initialState, action ) => { // перенесл
 //перенесли с store.js
 export const addPostActionCreator = () => ({ type: ADD_POST });
 export const setUserProfile = ( profile ) => ({ type: SET_USER_PROFILE, profile }); //ф-ция которая возвращает нам обьект - action, в котором инкапсулированы все данные, чтобы редьюсер получил этот action и применил эти изменения на свой стейт
-export const getUserProfile = ( userId ) => (dispatch) => { // создаем санку - ф-цию, которая принимаем ф-цию диспатч и делает внутри какието ассинхронные операции и различные мелкие астины
-    userAPI.getProfile(userId).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
-            dispatch(setUserProfile( response.data ));
+export const setStatus = ( status ) => ({ type: SET_STATUS, status }); // #73 ф-ция которая возвращает нам обьект - action, в котором инкапсулированы все данные, чтобы редьюсер получил этот action и применил эти изменения на свой стейт
+
+export const getUserProfile = ( userId ) => ( dispatch ) => { // создаем санку - ф-цию, которая принимаем ф-цию диспатч и делает внутри какието ассинхронные операции и различные мелкие астины
+    userAPI.getProfile( userId ).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+        dispatch( setUserProfile( response.data ) );
+    } );
+}
+
+export const getStatus = ( userId ) => ( dispatch ) => { // # 73 создаем санку - ф-цию, которая принимаем ф-цию диспатч и делает внутри какието ассинхронные операции и различные мелкие астины
+    profileAPI.getStatus( userId )
+        .then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+            dispatch( setStatus( response.data ) ); // когда плучим статус, мы его засетаем
         } );
 }
+
+export const updateStatus = ( status ) => ( dispatch ) => { // # 73 создаем санку - ф-цию, которая принимаем ф-цию диспатч и делает внутри какието ассинхронные операции и различные мелкие астины
+    profileAPI.updateStatus( status )
+        .then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+            if (response.data.resultCode === 0) {
+                dispatch( setStatus( status ) ); // когда плучим статус, мы его засетаем
+            }
+        } );
+}
+
 export const updateNewPostTextActionCreator = ( text ) => (
     { type: UPDATE_NEW_POST_TEXT, newText: text }
 );

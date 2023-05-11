@@ -2,7 +2,7 @@ import React from 'react';
 import Profile from "./Profile";
 import axios from "axios";
 import { connect } from "react-redux";
-import { getUserProfile, setUserProfile } from "../../redux/profile-reducer";
+import { getStatus, getUserProfile, setUserProfile, updateStatus } from "../../redux/profile-reducer";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Navigate as Redirect } from "react-router-dom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
@@ -20,6 +20,7 @@ class ProfileContainer extends React.Component { // делаем эту комп
         //     .then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
         //         this.props.setUserProfile( response.data );
         //     } );
+        this.props.getStatus(userId);// #73
     }
 
     render() {  // обязательный метод класс компоненты , который возвращает разметку JSX
@@ -28,7 +29,7 @@ class ProfileContainer extends React.Component { // делаем эту комп
         return (
             <div>
                 <Profile {...this.props}
-                         profile={this.props.profile}/> {/* передаем в презентационноую компоненту все пропсы ,которые пришли в классовую*/}
+                         profile={this.props.profile} status={this.props.status} updateStatus={this.props.updateStatus}/> {/* передаем в презентационноую компоненту все пропсы ,которые пришли в классовую*/}
             </div>
         )
     }
@@ -37,11 +38,12 @@ class ProfileContainer extends React.Component { // делаем эту комп
 let mapStateToProps = ( state ) => ({
     profile: state.profilePage.profile,
     // isAuth: state.auth.isAuth // #69 закоментил, т.к. создал еще одну "обертку"  mapStateToPropsForRedirect
+    status: state.profilePage.status, // #73 хотим получить статус из стейта
 })
 
 //СТАЛО
 export default compose(
-    connect ( mapStateToProps, { getUserProfile } ),
+    connect ( mapStateToProps, { getUserProfile, getStatus, updateStatus } ), // в таком синтаксесе мы не сам thunk creator передаем , а создается в памяти отдельная ф-ция колбек внутри которой диспатчится thunk creator
     withRouter, withAuthRedirect
 )(ProfileContainer)
 
@@ -73,4 +75,3 @@ function withRouter( Component ) { // добавил из комментарие
     }
     return ComponentWithRouterProp;
 }
-
