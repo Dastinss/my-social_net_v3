@@ -1,7 +1,7 @@
 import state from "./store";
 import profileReducer from "./profile-reducer";
 
-const UPDATE_NEW_MESSAGE_BODY = 'UPDATE-NEW-MESSAGE-BODY'; //создали новую константу для добавления нового действия
+// const UPDATE_NEW_MESSAGE_BODY = 'UPDATE-NEW-MESSAGE-BODY'; // закоментил в 76 уроке который создавал актион, который обновлял каждое нажатие клавиши\\ ранее создали новую константу для добавления нового действия
 const SEND_MESSAGE = 'SEND-MESSAGE'; //создали новую константу для добавления нового действия
 
 let initialState = { // одноразовый объект, стартовые данные
@@ -21,24 +21,25 @@ let initialState = { // одноразовый объект, стартовые 
         { id: 5, message: 'Yo' },
         { id: 6, message: 'Not bad' }
     ],
-    newMessageBody: ''
+    // newMessageBody: ''  // закоментил в 76 когда начали брать newMessageBody не в стейте где его больше нет, а в актионе
 };
 
 export const dialogsReducer = ( state = initialState, action ) => {
 
     switch (action.type) {
-        case UPDATE_NEW_MESSAGE_BODY:
-            return { ...state, newMessageBody: action.body };
+        // case UPDATE_NEW_MESSAGE_BODY: // закоментил в 76 уроке который создавал актион, который обновлял каждое нажатие клавиши
+        //     return { ...state, newMessageBody: action.body };
         // stateCopy.newMessageBody = action.body; // заоефакторили см.выше
         // state.newMessageBody = action.body; // законектили в уроке 48 когда начали создавать копии см.ниже
         // return state;
         // return stateCopy;// упростили, удалили stateCopy и сразу вызвали элемент
 
         case SEND_MESSAGE:
-            let body = state.newMessageBody;
+            // let body = state.newMessageBody; // закоментил в 76 когда начали брать newMessageBody не в стейте где его больше нет, а в актионе
+            let body = action.newMessageBody; // добавил в 76
             return {
                 ...state,
-                newMessageBody: '',
+                // newMessageBody: '', // закоментил в 76 когда затирали это сво-во, т.к. его больше нет
                 messages: [...state.messages, { id: 6, message: body }]
             }; //не поверхностная копия но и не полная копия, т.к. нет dialogs и newMessageBody. НО не делаем их копиии т.к. они не меняются
 
@@ -66,8 +67,8 @@ export const dialogsReducer = ( state = initialState, action ) => {
 // return state;
 
 //перенесли с store.js
-export const sendMessageCreator = () => ({ type: SEND_MESSAGE });
-export const updateNewMessageBodyCreator = ( body ) => (
-    { type: UPDATE_NEW_MESSAGE_BODY, body: body });
+export const sendMessageCreator = (newMessageBody) => ({ type: SEND_MESSAGE, newMessageBody });  //добавил в 76 уроке newMessageBody - полностью написанное сформированное сообщение застравяем принимать в АС и заставляем это сообщение упасть в action
+// export const updateNewMessageBodyCreator = ( body ) => ( //закоментил в 76 уроке который создавал актион, который обновлял каждое нажатие клавиши
+//     { type: UPDATE_NEW_MESSAGE_BODY, body: body });
 
 export default dialogsReducer;

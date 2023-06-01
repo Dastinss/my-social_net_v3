@@ -4,13 +4,13 @@ import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import { sendMessageCreator, updateNewMessageBodyCreator } from "../../redux/dialogs-reducer";
 import * as PropTypes from "prop-types";
-import { Navigate as Redirect} from "react-router-dom";
+import { Navigate as Redirect } from "react-router-dom";
+import { Field, reduxForm } from "redux-form";
 
 // let dialogs = [
 //     <DialogItem name = {dialogsData[0].name} id= {dialogsData[0].id}/>,
 //     ..... и тд
 // ]
-
 
 const Dialogs = ( props ) => {
 
@@ -25,18 +25,22 @@ const Dialogs = ( props ) => {
     let messagesElements = state.messages.map( m => <Message message={m.message} key={m.id}/> );
     let newMessageBody = state.newMessageBody;
 
-    let onSendMessageClick = () => {
+    let onSendMessageClick = () => { // закоментил в 76 уроке т.к. заменили его на addNewMessage
         // props.store.dispatch(sendMessageCreator()); // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
         props.sendMessage(); //хотим сообщить, что нажалась кнопка и мы хотим отправить сообщение
     }
 
-    let onNewMessageChange = ( event ) => {
-        let body = event.target.value;
-        props.updateNewMessageBody( body );
-        // props.store.dispatch(updateNewMessageBodyCreator(body)); // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
+    // let onNewMessageChange = ( event ) => { // закоментил в 76 уроке который создавал актион, который обновлял каждое нажатие клавиши
+    //     let body = event.target.value;
+    //     props.updateNewMessageBody( body );
+    //     // props.store.dispatch(updateNewMessageBodyCreator(body)); // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
+    // }
+
+    let addNewMessage = (values) => { // урок 76 добавили
+        props.sendMessage(values.newMessageBody); // 76: sendMessage который приходит в пропсы в компоненту Диалогс из контейнерной компоненты благодаря mapDispatchToProps он будет принимать
     }
 
-    if (!props.isAuth) return <Redirect to = '/login'/>; // у Димыча в уроке 68 стоит не Navigate , а Redirect, поєтому подправил самостоятельно импорт
+    if (!props.isAuth) return <Redirect to='/login'/>; // у Димыча в уроке 68 стоит не Navigate , а Redirect, поєтому подправил самостоятельно импорт
 
     return (
         <div className={s.dialogs}>
@@ -50,21 +54,33 @@ const Dialogs = ( props ) => {
                 {/* и т.д. такие же єлементы*/}
             </div>
             <div className={s.messages}>
-
                 <div>{messagesElements}</div>
                 {/*<Message message={messagesData[0].message}/>*/}
                 {/* и т.д. такие же єлементы*/}
-                <div>
-                    <div><textarea value={newMessageBody}
-                                   onChange={onNewMessageChange}
-                                   placeholder={'Enter your message'}></textarea></div>
-                    <div>
-                        <button onClick={onSendMessageClick}>Send</button>
-                    </div>
-                </div>
             </div>
+            <AddMessageFormRedux onSubmit = {addNewMessage}/>
         </div>
     )
 }
+
+const AddMessageForm = ( props ) => { //76 выделили в отдельную компоненту
+    return (
+        <form
+            onSubmit={props.handleSubmit}> {/* // handleSubmit специальный метод, который к нам придет из redux-form из контейнерной компоненты, которая получается после оборачивания HOCом*/}
+            <div>
+                <Field component='textarea' name='newMessageBody' placeholder='Enter your message'/>
+                {/*<textarea value={newMessageBody}*/}
+                {/*  onChange={onNewMessageChange}*/}
+                {/*  placeholder={'Enter your message'}></textarea>*/}
+            </div>
+            <div>
+                <button>Send</button>
+            </div>
+            {/*<div><button onClick={onSendMessageClick}>Send</button></div>*/}
+        </form>
+    )
+}
+
+const AddMessageFormRedux = reduxForm( { form: 'dialogAddMessageForm' } )( AddMessageForm );
 
 export default Dialogs;

@@ -21,12 +21,12 @@ let mapStateToProps = ( state ) => { //ф-ция задача которой з�
 
 let mapDispatchToProps = ( dispatch ) => { // настраивает колл беки которые мы будем отправлять в нашу през.компоненту
     return {
-        sendMessage: () => {
-            dispatch( sendMessageCreator() )
+        sendMessage: (newMessageBody) => { //добавил в 76 уроке newMessageBody - полностью написанное сформированное сообщение
+            dispatch( sendMessageCreator(newMessageBody) )  //добавил в 76 уроке newMessageBody - полностью написанное сформированное сообщение передаем в АС
         },
-        updateNewMessageBody: ( body ) => {
-            dispatch( updateNewMessageBodyCreator( body ) )
-        },
+        // updateNewMessageBody: ( body ) => { // закоментил в 76 уроке который создавал актион, который обновлял каждое нажатие клавиши, т.е. мы не будем апдейтить на каждый клик
+        //     dispatch( updateNewMessageBodyCreator( body ) )
+        // },
     }
 }
 
