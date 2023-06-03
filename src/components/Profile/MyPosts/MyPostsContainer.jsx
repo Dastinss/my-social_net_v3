@@ -13,14 +13,14 @@ let mapStateToProps = (state) => { // запускается эта ф-ция к
 
 const mapDispatchToProps = ( dispatch ) => {
     return {
-        updateNewPostText: ( text ) => {
-            let action = updateNewPostTextActionCreator( text );
-            dispatch( action );
-        },
-
-        addPost: () => {
-            dispatch( addPostActionCreator() );
+        addPost: (newPostText) => {
+            dispatch( addPostActionCreator(newPostText) );
         }
+
+        // updateNewPostText: ( text ) => {// урок 76 закоментил, т.к. мы каждый клик не обрабатываем
+        //     let action = updateNewPostTextActionCreator( text );
+        //     dispatch( action );
+        // },
     }
 }
 
