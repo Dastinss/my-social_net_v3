@@ -6,6 +6,9 @@ import { sendMessageCreator, updateNewMessageBodyCreator } from "../../redux/dia
 import * as PropTypes from "prop-types";
 import { Navigate as Redirect } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
+import { maxLengthCreator, required } from "../../utils/validators/validators";
+import { Textarea } from "../Common/FormsControls/FormsControls";
+import { AddMessageForm, AddMessageFormRedux } from "./AddMessageForm/AddMessageForm";
 
 // let dialogs = [
 //     <DialogItem name = {dialogsData[0].name} id= {dialogsData[0].id}/>,
@@ -62,25 +65,5 @@ const Dialogs = ( props ) => {
         </div>
     )
 }
-
-const AddMessageForm = ( props ) => { //76 выделили в отдельную компоненту
-    return (
-        <form
-            onSubmit={props.handleSubmit}> {/* // handleSubmit специальный метод, который к нам придет из redux-form из контейнерной компоненты, которая получается после оборачивания HOCом*/}
-            <div>
-                <Field component='textarea' name='newMessageBody' placeholder='Enter your message'/>
-                {/*<textarea value={newMessageBody}*/}
-                {/*  onChange={onNewMessageChange}*/}
-                {/*  placeholder={'Enter your message'}></textarea>*/}
-            </div>
-            <div>
-                <button>Send</button>
-            </div>
-            {/*<div><button onClick={onSendMessageClick}>Send</button></div>*/}
-        </form>
-    )
-}
-
-const AddMessageFormRedux = reduxForm( { form: 'dialogAddMessageForm' } )( AddMessageForm );
 
 export default Dialogs;

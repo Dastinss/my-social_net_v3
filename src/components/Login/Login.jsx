@@ -1,20 +1,24 @@
 import React from 'react';
 import { formToJSON } from "axios";
 import { Field, reduxForm } from "redux-form";
+import { Input } from "../Common/FormsControls/FormsControls";
+import { required } from "../../utils/validators/validators";
 
 const LoginForm = ( props ) => {
     return (
         <form onSubmit={props.handleSubmit}> {/*у любой формы есть событие onSubmit, поскольку в пропсах есть handleSubmit (приходит из контейнерной компоненты), мы хотим доверить ему оработку сабмита*/}
             <div>
-                  <Field placeholder={'Login'} name={'login'} component={'input'}/>{/*#75 добавил имя name={УКАЗЫВАЕМ свойство} для отправки на сервер имени данного элемента куда мы вводим данные*/}
+                  <Field placeholder={'Login'} name={'login'}
+                         component={Input}
+                         validate={[required]}/>{/*#75 добавил имя name={УКАЗЫВАЕМ свойство} для отправки на сервер имени данного элемента куда мы вводим данные §77 добавили валидацию - ф-цию Input, validate={[required]}*/}
                 {/*<input placeholder={'Login'}/> // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту) из билиотеки reduxForm*/}
             </div>
             <div>
-                <Field placeholder={'Password'} name={'password'} component={'input'}/>
+                <Field placeholder={'Password'} name={'password'} component={Input} validate={[required]}/>
                 {/*<input placeholder={'Password'} // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту)из билиотеки reduxForm/>*/}
             </div>
             <div>
-                <Field component={'input'} name={'rememberMe'} type={'checkbox'}/> remember me
+                <Field component={Input} name={'rememberMe'} type={'checkbox'}/> remember me
                 {/*<input type={'checkbox'}/> remember me // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту)из билиотеки reduxForm/>*!/*/}
             </div>
             <div>
