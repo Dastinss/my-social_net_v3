@@ -1,9 +1,7 @@
 import React from 'react';
 import Header from "./Header";
-import axios from "axios";
 import { connect } from "react-redux";
-import { getAuthUserData, setAuthUserData } from "../../redux/auth-reducer";
-import { authAPI } from "../../api/api";
+import { getAuthUserData, logout, setAuthUserData } from "../../redux/auth-reducer";
 
 class HeaderContainer extends React.Component { //классовая компонента должна обязательно раширять базовый класс реакт компонеты и обязательно должна в методе рендер jsx
     componentDidMount() { // метод жизненного цикла компоненты. в этом методе НУЖНО делать все сайд=эффекты. Компонента монтирует страничку только один раз
@@ -35,4 +33,4 @@ const mapStateToProps = ( state ) => ({
     login: state.auth.login,// эти данные придут в  контейнерную компоненту HeaderContainer, которая прокинет их через <Header {...this.props} в Header, который из пропсов достанет и покажет в нав линк (const Header = (props) .... <NavLink)
 });
 
-export default connect( mapStateToProps, { getAuthUserData } )( HeaderContainer );
+export default connect( mapStateToProps, { getAuthUserData, logout } )( HeaderContainer ); //78 добавил АС который мы создали для ВЫлогинивания
