@@ -9,10 +9,11 @@ import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
 
 class ProfileContainer extends React.Component { // делаем эту компоненту классовой чтобы иметь возможность сделать запрос
-    componentDidMount() {
+    componentDidMount() { // показываем в Профайл то, когда не знаем что показывать
         let userId = this.props.router.params.userId;
         if (!userId) {
-            userId = 2
+            // userId = 2 // 79 закоментил захардкодженный юзер Id
+            userId = this.props.authorizedUserId // 79 дабавил свой профиль на загрузочную страницу вместо захардкоденной сверху, но this. - добавил поскольку подьзователь может быть не залогинен в этот момент времени
         }
         this.props.getUserProfile( userId ); // #67
         // userAPI.getProfile( userId ) // сделали так, чтобы компонентв не обращалась к ДАЛ уровню, поэтому закоментили
@@ -20,7 +21,7 @@ class ProfileContainer extends React.Component { // делаем эту комп
         //     .then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
         //         this.props.setUserProfile( response.data );
         //     } );
-        this.props.getStatus(userId);// #73
+        this.props.getStatus( userId );// #73
     }
 
     render() {  // обязательный метод класс компоненты , который возвращает разметку JSX
@@ -29,7 +30,8 @@ class ProfileContainer extends React.Component { // делаем эту комп
         return (
             <div>
                 <Profile {...this.props}
-                         profile={this.props.profile} status={this.props.status} updateStatus={this.props.updateStatus}/> {/* передаем в презентационноую компоненту все пропсы ,которые пришли в классовую*/}
+                         profile={this.props.profile} status={this.props.status}
+                         updateStatus={this.props.updateStatus}/> {/* передаем в презентационноую компоненту все пропсы ,которые пришли в классовую*/}
             </div>
         )
     }
@@ -39,13 +41,15 @@ let mapStateToProps = ( state ) => ({
     profile: state.profilePage.profile,
     // isAuth: state.auth.isAuth // #69 закоментил, т.к. создал еще одну "обертку"  mapStateToPropsForRedirect
     status: state.profilePage.status, // #73 хотим получить статус из стейта
+    authorizedUserId: state.auth.userId, // #79 берем  auth из веточки в redux-store.jsx. В компоненту приходят єти данные
+    isAuth: state.auth.isAuth // #79 берем  auth из веточки в redux-store.jsx. В компоненту приходят єти данные
 })
 
 //СТАЛО
 export default compose(
-    connect ( mapStateToProps, { getUserProfile, getStatus, updateStatus } ), // в таком синтаксесе мы не сам thunk creator передаем , а создается в памяти отдельная ф-ция колбек внутри которой диспатчится thunk creator
+    connect( mapStateToProps, { getUserProfile, getStatus, updateStatus } ), // в таком синтаксесе мы не сам thunk creator передаем , а создается в памяти отдельная ф-ция колбек внутри которой диспатчится thunk creator
     withRouter, withAuthRedirect
-)(ProfileContainer)
+)( ProfileContainer )
 
 // БЫЛО
 // let AuthRedirectComponent = withAuthRedirect(ProfileContainer); // #69 Вызвали HOC c нужным параметром, передав в него нужную компоненту
@@ -60,7 +64,6 @@ export default compose(
 // let WithUrlDataContainerComponent = withRouter( AuthRedirectComponent ) // передали контейнерную компоненту, которую построили над ProfileContainer, заменив ее
 // export default connect( mapStateToProps, { getUserProfile } )( WithUrlDataContainerComponent );
 
-
 function withRouter( Component ) { // добавил из комментариев к уроку 60, т.к. разбор Димыча устарел: withRouter вшитой в Реакт уже нет. Получается виесто нее создали ф-цию с таким же названием
     function ComponentWithRouterProp( props ) {
         let location = useLocation();
@@ -73,5 +76,6 @@ function withRouter( Component ) { // добавил из комментарие
             />
         );
     }
+
     return ComponentWithRouterProp;
 }
