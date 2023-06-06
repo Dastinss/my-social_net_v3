@@ -2,6 +2,7 @@
 //Все значения в state меняются через редьюсер
 
 import { authAPI } from "../api/api";
+import { stopSubmit } from "redux-form";
 
 const SET_USER_DATA = 'SET_USER_DATA';
 
@@ -27,8 +28,10 @@ const authReducer = ( state = initialState, action ) => {
     }
 };
 
-export const setAuthUserData = ( userId, email, login, isAuth ) => ({ type: SET_USER_DATA, payload:
-        { userId, email, login, isAuth } }); // AC = ActionCreator ф-ция которая формирует и возвращает обтект action
+export const setAuthUserData = ( userId, email, login, isAuth ) => ({
+    type: SET_USER_DATA, payload:
+        { userId, email, login, isAuth }
+}); // AC = ActionCreator ф-ция которая формирует и возвращает обтект action
 export const getAuthUserData = () => ( dispatch ) => { // thunk делает ассинхронную операцию которая раньше делалсь в компоненте
     authAPI.me()
         .then( response => { // подписываемся на этот промис с помощью then
@@ -44,15 +47,18 @@ export const login = ( email, password, rememberMe ) => ( dispatch ) => { // 78 
         .then( response => { // подписываемся на этот промис с помощью then
             if (response.data.resultCode === 0) { //проверка обязательная о том ,что если в респонсе в дате сидит resultCode = 0, то мы залогинены (берем из документации https://social-network.samuraijs.com/docs#auth_me_get инфо )  и только в этом случае мы должны задиспатчить эти авторизационные данные. Возьмем мы их из респонс
                 dispatch( getAuthUserData() )
+            } else {
+                let message = response.data.messages.length > 0 ? response.data.messages[0] : 'Some error';
+                dispatch( stopSubmit( 'login', { _error: message } )); // 79 -  показываем, что пользователь ввел неправильные данные при логировании. Для этого задиспатчиили актион, который получили с помощью АС stopSubmit.Первім параметром передали название формы, а вторым - обьект с ошибками для каждого филда, но указали не отдельные филды из нашей формы, а общую ошибку
             }
         } );
 }
 
-export const logout = ( ) => ( dispatch ) => { // 78 thunk делает ассинхронную операцию которая раньше делалсь в компоненте. принимает метод диспатч.  в даном случае задача санки - ВЫлогиниться
-    authAPI.logout( )
+export const logout = () => ( dispatch ) => { // 78 thunk делает ассинхронную операцию которая раньше делалсь в компоненте. принимает метод диспатч.  в даном случае задача санки - ВЫлогиниться
+    authAPI.logout()
         .then( response => { // подписываемся на этот промис с помощью then
             if (response.data.resultCode === 0) { //проверка обязательная о том ,что если в респонсе в дате сидит resultCode = 0, то мы ВЫлогинены (берем из документации https://social-network.samuraijs.com/docs#auth_me_get инфо )  и только в этом случае мы должны задиспатчить эти авторизационные данные. Возьмем мы их из респонс
-                dispatch( setAuthUserData(null,null,null, false) )
+                dispatch( setAuthUserData( null, null, null, false ) )
             }
         } );
 }

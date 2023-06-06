@@ -8,6 +8,7 @@ import { login } from "../../redux/auth-reducer";
 import { Navigate } from "react-router";
 import { Redirect } from 'react-router';
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import styles from './../Common/FormsControls/FormsControls.module.css'
 
 const LoginForm = ( props ) => {
     return (
@@ -29,6 +30,10 @@ const LoginForm = ( props ) => {
                 <Field component={Input} name={'rememberMe'} type={'checkbox'}/> remember me
                 {/*<input type={'checkbox'}/> remember me // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту)из билиотеки reduxForm/>*!/*/}
             </div>
+            {props.error && <div className={styles.formSummaryError}>
+                {props.error}
+            </div>
+            }
             <div>
                 <button>Login</button>
             </div>
@@ -48,7 +53,7 @@ const Login = ( props ) => {
 
     const navigate = useNavigate(); // 78 заменил сам - Redirect, как показывал Димыч, поставил navigate/useNavigate
     if (props.isAuth) {
-        return navigate ('/profile') // 78 заменил сам - Redirect, как показывал Димыч, поставил navigate/useNavigate
+        return navigate( '/profile' ) // 78 заменил сам - Redirect, как показывал Димыч, поставил navigate/useNavigate
     }
 
     return <div>
