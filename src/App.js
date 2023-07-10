@@ -12,8 +12,14 @@ import UsersContainer from "./components/Users/UsersContainer";
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import LoginPage from "./components/Login/Login";
+import { connect } from "react-redux";
+import { getAuthUserData } from "./redux/auth-reducer";
+import { compose } from "redux";
 
-class App extends React.Component { // 80 через гарячие клавиши сделали из функциональной классовую кампоненту, все сноски оставил
+class App extends React.Component { // 80 через гарячие клавиши сделали из функциональной классовую кампоненту,т.к. нам нужем метод жизненного цикла. все сноски оставил
+    componentDidMount() { // #80 перенесли из HeaderContainer. метод жизненного цикла компоненты. в этом методе НУЖНО делать все сайд=эффекты. Компонента монтирует страничку только один раз
+        this.props.getAuthUserData();}
+
     render() {
         return (
             <BrowserRouter>
@@ -52,10 +58,11 @@ class App extends React.Component { // 80 через гарячие клавиш
     }
 }
 
-export default App;
+export default compose ( // 80 добавил метод compose, но не добавлял метод withRouter, т.к. он не импортируется
+    connect ( null, { getAuthUserData })) (App); //80 добавил
+// export default App; // 80 закоментил, т.к. выше обернул все  в коннект для экспорта getAuthUserData
 
 //Закоментил в #80 т.к. сделали из функциональной классовую компоненту. Цель - перенести из Header запрос касательно запроса на сервер (?)... . А посольку функциональная компонета типа чистая, то не можем делать асинхронные запросы
-// const App = ( props ) => {
 //     return (
 //         <BrowserRouter>
 //             <div className='app-wrapper'>
