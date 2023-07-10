@@ -13,40 +13,82 @@ import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import LoginPage from "./components/Login/Login";
 
-const App = ( props ) => {
-    return (
-        <BrowserRouter>
-            <div className='app-wrapper'>
-                {/*<Header/> // закоментил в уроке 61 когда ввел контейнерную компоненту , т.е. обертку для Header*/}
-                <HeaderContainer/>
-                <Navbar/>
-                <div className='app-wrapper-content'>
-                    <Routes>
-                        <Route path="/dialogs"
-                            // element={<Dialogs store={props.store} // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
-                            // element={<DialogsContainer store={props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
-                               element={<DialogsContainer/>}/>
-                        <Route path="/profile/:userId?" // после урока 59 добавил /* в Route path="/profile/*" из комментов к уроку 59, т.к. без этого не отображался корректно добавляемый user
-                            // element={<Profile store = {props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
+class App extends React.Component { // 80 через гарячие клавиши сделали из функциональной классовую кампоненту, все сноски оставил
+    render() {
+        return (
+            <BrowserRouter>
+                <div className='app-wrapper'>
+                    {/*<Header/> // закоментил в уроке 61 когда ввел контейнерную компоненту , т.е. обертку для Header*/}
+                    <HeaderContainer/>
+                    <Navbar/>
+                    <div className='app-wrapper-content'>
+                        <Routes>
+                            <Route path="/dialogs"
+                                // element={<Dialogs store={props.store} // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
+                                // element={<DialogsContainer store={props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
+                                   element={<DialogsContainer/>}/>
+                            <Route
+                                path="/profile/:userId?" // после урока 59 добавил /* в Route path="/profile/*" из комментов к уроку 59, т.к. без этого не отображался корректно добавляемый user
+                                // element={<Profile store = {props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
 
-                            // profilePage={props.state.profilePage} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
-                            // addPost={props.addPost}
-                            // updateNewPostText={props.updateNewPostText}/>}/>
+                                // profilePage={props.state.profilePage} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
+                                // addPost={props.addPost}
+                                // updateNewPostText={props.updateNewPostText}/>}/>
 
-                            //заменили закоменченные выше два метода на один dispatch
-                            // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
-                            //    element={<Profile/>}/> // закоментили в уроке 59 когда создали контейнерную компоненту для Profile
-                               element={<ProfileContainer/>}/>
+                                //заменили закоменченные выше два метода на один dispatch
+                                // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
+                                //    element={<Profile/>}/> // закоментили в уроке 59 когда создали контейнерную компоненту для Profile
+                                element={<ProfileContainer/>}/>
 
-                        <Route path="/users"
-                               element={<UsersContainer/>}/>
+                            <Route path="/users"
+                                   element={<UsersContainer/>}/>
 
-                        <Route path="/login"
-                               element={<LoginPage/>}/>
-                    </Routes>
+                            <Route path="/login"
+                                   element={<LoginPage/>}/>
+                        </Routes>
+                    </div>
                 </div>
-            </div>
-        </BrowserRouter>)
+            </BrowserRouter>)
+    }
 }
 
 export default App;
+
+//Закоментил в #80 т.к. сделали из функциональной классовую компоненту. Цель - перенести из Header запрос касательно запроса на сервер (?)... . А посольку функциональная компонета типа чистая, то не можем делать асинхронные запросы
+// const App = ( props ) => {
+//     return (
+//         <BrowserRouter>
+//             <div className='app-wrapper'>
+//                 {/*<Header/> // закоментил в уроке 61 когда ввел контейнерную компоненту , т.е. обертку для Header*/}
+//                 <HeaderContainer/>
+//                 <Navbar/>
+//                 <div className='app-wrapper-content'>
+//                     <Routes>
+//                         <Route path="/dialogs"
+//                             // element={<Dialogs store={props.store} // закоментили в уроке 43 когда создали контейнерную компоненту DialogsContainer
+//                             // element={<DialogsContainer store={props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
+//                                element={<DialogsContainer/>}/>
+//                         <Route path="/profile/:userId?" // после урока 59 добавил /* в Route path="/profile/*" из комментов к уроку 59, т.к. без этого не отображался корректно добавляемый user
+//                             // element={<Profile store = {props.store} // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext перестали передавать в нашу контейнерную компоненту что либо через пропсы т.е. дали доступ store ко всем компонентам внутри App
+//
+//                             // profilePage={props.state.profilePage} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
+//                             // addPost={props.addPost}
+//                             // updateNewPostText={props.updateNewPostText}/>}/>
+//
+//                             //заменили закоменченные выше два метода на один dispatch
+//                             // dispatch={props.dispatch} // закоментили в уроке 43 когда создали контейнерную компоненту MyPostsContainer
+//                             //    element={<Profile/>}/> // закоментили в уроке 59 когда создали контейнерную компоненту для Profile
+//                                element={<ProfileContainer/>}/>
+//
+//                         <Route path="/users"
+//                                element={<UsersContainer/>}/>
+//
+//                         <Route path="/login"
+//                                element={<LoginPage/>}/>
+//                     </Routes>
+//                 </div>
+//             </div>
+//         </BrowserRouter>)
+// }
+//
+// export default App;
