@@ -33,7 +33,7 @@ export const setAuthUserData = ( userId, email, login, isAuth ) => ({
         { userId, email, login, isAuth }
 }); // AC = ActionCreator ф-ция которая формирует и возвращает обтект action
 export const getAuthUserData = () => ( dispatch ) => { // thunk делает ассинхронную операцию которая раньше делалсь в компоненте
-    authAPI.me()
+    return authAPI.me() // me возвращает нам промис и мы на него "зенимся" (then)
         .then( response => { // подписываемся на этот промис с помощью then
             if (response.data.resultCode === 0) { //проверка обязательная о том ,что если в респонсе в дате сидит resultCode = 0, то мы залогинены (берем из документации https://social-network.samuraijs.com/docs#auth_me_get инфо )  и только в этом случае мы должны задиспатчить эти авторизационные данные. Возьмем мы их из респонс
                 let { id, email, login } = response.data.data; //делаем деструктуризацию

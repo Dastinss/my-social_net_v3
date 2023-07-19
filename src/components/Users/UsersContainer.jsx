@@ -94,7 +94,7 @@ let mapStateToProps = ( state ) => { //ф-ция которая возвраща
 
 //СТАЛО
 export default compose(
-    withAuthRedirect,
+    // withAuthRedirect, // 80 убрали защиту с закладки  Users чтобы можно было просматривать ее не залогиниваясь
     connect( mapStateToProps,
         { follow, unfollow, setCurrentPage, toggleFollowingProgress, getUsers } )
 )( UsersContainer );

@@ -15,12 +15,18 @@ import LoginPage from "./components/Login/Login";
 import { connect } from "react-redux";
 import { getAuthUserData } from "./redux/auth-reducer";
 import { compose } from "redux";
+import { initializeApp } from "./redux/app-reducer";
+import Preloader from "./components/Common/Preloader/Preloader";
 
 class App extends React.Component { // 80 через гарячие клавиши сделали из функциональной классовую кампоненту,т.к. нам нужем метод жизненного цикла. все сноски оставил
     componentDidMount() { // #80 перенесли из HeaderContainer. метод жизненного цикла компоненты. в этом методе НУЖНО делать все сайд=эффекты. Компонента монтирует страничку только один раз
-        this.props.getAuthUserData();}
+        this.props.initializeApp();
+    }
 
-    render() {
+    render() { // 80 возвращаем всю разметку только когда проинициализированы, в противном случае показываем сплеш скрин (окно загрузки)
+        if (!this.props.initialized) {
+            return <Preloader/>
+        }
         return (
             <BrowserRouter>
                 <div className='app-wrapper'>
@@ -58,11 +64,15 @@ class App extends React.Component { // 80 через гарячие клавиш
     }
 }
 
-export default compose ( // 80 добавил метод compose, но не добавлял метод withRouter, т.к. он не импортируется
-    connect ( null, { getAuthUserData })) (App); //80 добавил
+const mapStateToProps = ( state ) => ({
+    initialized: state.app.initialized // 80 ф-ция получила стейт и вернула обьект в котором будет initialized Теперь наш арр получит знания про то проинициализировано оно или нет
+})
+
+export default compose( // 80 добавил метод compose, но не добавлял метод withRouter, т.к. он не импортируется
+    connect( mapStateToProps, { initializeApp } ) )( App ); //80 добавил. диспатчим тут санку initializeApp
 // export default App; // 80 закоментил, т.к. выше обернул все  в коннект для экспорта getAuthUserData
 
-//Закоментил в #80 т.к. сделали из функциональной классовую компоненту. Цель - перенести из Header запрос касательно запроса на сервер (?)... . А посольку функциональная компонета типа чистая, то не можем делать асинхронные запросы
+//Закоментил в #80 т.к. сделали из функциональной классовую компоненту. Цель - добавить в App компоненту метод жизненного цикла, к тому же она не чистая, поскольку рендерит контейнерніе компоненті, следовательно толку от нее мало. . Переносим из Header запрос касательно запроса на сервер (?)... . А посольку функциональная компонета типа чистая, то не можем делать асинхронные запросы
 //     return (
 //         <BrowserRouter>
 //             <div className='app-wrapper'>

@@ -10,10 +10,13 @@ import { compose } from "redux";
 
 class ProfileContainer extends React.Component { // делаем эту компоненту классовой чтобы иметь возможность сделать запрос
     componentDidMount() { // показываем в Профайл то, когда не знаем что показывать
-        let userId = this.props.router.params.userId;
+        let userId = this.props.router.params.userId; // если мы смонтировались и в параметрах ничего нет, то ... (см ниже))
         if (!userId) {
             // userId = 2 // 79 закоментил захардкодженный юзер Id
             userId = this.props.authorizedUserId // 79 дабавил свой профиль на загрузочную страницу вместо захардкоденной сверху, но this. - добавил поскольку подьзователь может быть не залогинен в этот момент времени
+            if (!userId) { // 80 - если же не залогиненый, то идем, к примеру на страничку '/login'
+                this.props.history.push('/login') // нужно стараться делать такие переходы через JSX
+            }
         }
         this.props.getUserProfile( userId ); // #67
         // userAPI.getProfile( userId ) // сделали так, чтобы компонентв не обращалась к ДАЛ уровню, поэтому закоментили
