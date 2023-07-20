@@ -92,7 +92,7 @@ export const requestUsers = ( page, pageSize) => { // создаем ф-цию t
         dispatch(setCurrentPage( page )); // сделали жирным подсветку страниц в уроке 81
 
         userAPI.getUsers(page, pageSize).then( data => { // импортируем ф-цию с запросом с api
-            dispatch(setCurrentPage(page)); // добавил по совету из комментариев к видео, хотя Димыч это не делал. Изначально в UsersContainer это было удалено onPageChanger - откуда переносили не было
+            dispatch(setCurrentPage(page)); // добавил по со    вету из комментариев к видео, хотя Димыч это не делал. Изначально в UsersContainer это было удалено onPageChanger - откуда переносили не было
             dispatch(toggleFetching( false )); // диспатчим что закончился тогллинг
             dispatch(setUsers( data.items )); // юзер не из вне вызывается как раньше UsersContainer, а сетаем юзера внутри БЛЛ- бизнес их запросил и бизнес их сетает
             dispatch(setTotalUsersCount( data.totalCount )); //мы хотим что то с компоненты UI отправить в state, нам нужен для єтого колл бек, который передают через пропсы. Значит такой колл бек который что то меняет в state приходит из mapDispatchToProps

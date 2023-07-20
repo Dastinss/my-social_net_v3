@@ -15,7 +15,7 @@ class ProfileContainer extends React.Component { // делаем эту комп
             // userId = 2 // 79 закоментил захардкодженный юзер Id
             userId = this.props.authorizedUserId // 79 дабавил свой профиль на загрузочную страницу вместо захардкоденной сверху, но this. - добавил поскольку подьзователь может быть не залогинен в этот момент времени
             if (!userId) { // 80 - если же не залогиненый, то идем, к примеру на страничку '/login'
-                this.props.history.push('/login') // нужно стараться делать такие переходы через JSX
+                this.props.history.push( '/login' ) // нужно стараться делать такие переходы через JSX
             }
         }
         this.props.getUserProfile( userId ); // #67
@@ -29,7 +29,7 @@ class ProfileContainer extends React.Component { // делаем эту комп
 
     render() {  // обязательный метод класс компоненты , который возвращает разметку JSX
         // if (!this.props.isAuth) return <Redirect to='/login' /> // урок 69 передали в конетейнерную компонету, ранее в // урок 68 делаем переадресацию на логин, если мы не залогинились (не показываем страничку вовсе)
-
+        // console.log( 'RENDER PROFILE' ) //82 смотрим сколько раз вызывается рендер
         return (
             <div>
                 <Profile {...this.props}
@@ -40,13 +40,16 @@ class ProfileContainer extends React.Component { // делаем эту комп
     }
 }
 
-let mapStateToProps = ( state ) => ({
-    profile: state.profilePage.profile,
-    // isAuth: state.auth.isAuth // #69 закоментил, т.к. создал еще одну "обертку"  mapStateToPropsForRedirect
-    status: state.profilePage.status, // #73 хотим получить статус из стейта
-    authorizedUserId: state.auth.userId, // #79 берем  auth из веточки в redux-store.jsx. В компоненту приходят єти данные
-    isAuth: state.auth.isAuth // #79 берем  auth из веточки в redux-store.jsx. В компоненту приходят єти данные
-})
+let mapStateToProps = ( state ) => {
+    // console.log( 'mapStateToProps PROFILE' ) //82 смотрим сколько раз вызывается mapStateToProps
+    return ({
+        profile: state.profilePage.profile,
+        // isAuth: state.auth.isAuth // #69 закоментил, т.к. создал еще одну "обертку"  mapStateToPropsForRedirect
+        status: state.profilePage.status, // #73 хотим получить статус из стейта
+        authorizedUserId: state.auth.userId, // #79 берем  auth из веточки в redux-store.jsx. В компоненту приходят єти данные
+        isAuth: state.auth.isAuth // #79 берем  auth из веточки в redux-store.jsx. В компоненту приходят єти данные
+    })
+}
 
 //СТАЛО
 export default compose(
