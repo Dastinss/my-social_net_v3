@@ -29,7 +29,7 @@ class ProfileContainer extends React.Component { // делаем эту комп
 
     render() {  // обязательный метод класс компоненты , который возвращает разметку JSX
         // if (!this.props.isAuth) return <Redirect to='/login' /> // урок 69 передали в конетейнерную компонету, ранее в // урок 68 делаем переадресацию на логин, если мы не залогинились (не показываем страничку вовсе)
-        // console.log( 'RENDER PROFILE' ) //82 смотрим сколько раз вызывается рендер
+        console.log( 'RENDER PROFILE' ) //82 смотрим сколько раз вызывается рендер
         return (
             <div>
                 <Profile {...this.props}
@@ -41,7 +41,7 @@ class ProfileContainer extends React.Component { // делаем эту комп
 }
 
 let mapStateToProps = ( state ) => {
-    // console.log( 'mapStateToProps PROFILE' ) //82 смотрим сколько раз вызывается mapStateToProps
+    console.log( 'mapStateToProps PROFILE' ) //82 смотрим сколько раз вызывается mapStateToProps
     return ({
         profile: state.profilePage.profile,
         // isAuth: state.auth.isAuth // #69 закоментил, т.к. создал еще одну "обертку"  mapStateToPropsForRedirect

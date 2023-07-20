@@ -14,6 +14,10 @@ import { Provider } from "react-redux";
 // все что ниже перенесли из index.js и возвращаем туда в виде ф-ции rerenderEnrireTree для того ,чтобы перерисвывать каждый раз все дерево и не было циклической ссылки (см. уроу № 33. Уроки React JS)
 // до 35 урока было все в отдельном файле render.js, после чего перенесли все в index.js (точнее вернули все туда)
 
+// setInterval( () => { // 83 - тестировали reselector
+//     store.dispatch ({type: 'FAKE'})
+// }, 1000 )
+
 const root = ReactDOM.createRoot( document.getElementById( 'root' ) ); // ВОТ ЭТА СТРОКА - ее скопировал с каментов с урока 34, т.к. біла ошибка изза обновления
 //let rerenderEnrireTree = ( state ) => { // убрали перерисовку в уроке 47 после того как в уроке 46 добавили connect, который внутри себя сам делает ЕДИНОЖДЫ ОТРИСОВКУ
     root.render(

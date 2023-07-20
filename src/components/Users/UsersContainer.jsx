@@ -24,7 +24,7 @@ import {
     getTotalUsersCount,
     getCurrentPage,
     getIsFetching,
-    getFollowingInProgress
+    getFollowingInProgress, getUsersSuperSelector
 } from "../../redux/users-selectors";
 
 //Это классовая компонента!!! Работет через колл беки, берет все время у пропсов что то
@@ -103,7 +103,8 @@ class UsersContainer extends React.Component { // без extends React.Component
 
 let mapStateToProps = ( state ) => { //#81 - создали под users-selectors.jsx вместо закомменченного вверху
     return {
-        users: getUsers( state ), // ф-цыя с users-selectors.jsx
+        // users: getUsers( state ), // 83 - закоментил, т.к. делаем через reselector, ранее -ф-цыя с users-selectors.jsx
+        users: getUsers( state ), // 83 - создали под реселектор
         pageSize: getPageSize( state ),
         totalUsersCount: getTotalUsersCount( state ),
         currentPage: getCurrentPage( state ),

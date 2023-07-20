@@ -10,6 +10,7 @@ const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_CURRENT_USERS_COUNT = 'SET_CURRENT_USERS_COUNT';
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'; //меняем значения картинки-крутилки (лоадер)
 const TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS'; //меняем значения кнопки follow/unfollow
+// const FAKE = 'FAKE';// 83 - тестировали reselector
 
 let initialState = {
     users: [], // в state есть пустой массив в нем пользователи кот счас нет и которых мы запрашиваем с сервера и потом сюда сетаем
@@ -17,12 +18,15 @@ let initialState = {
     totalUsersCount: 0, // мы не знаем сколько юзеров, пока не уйдет запрос на сервер и пока мы не узнаем ответ
     currentPage: 1, // текущая страница (которая подсвечивается среди прочихЖ 12345)
     isFetching: true, // состояние загруженности страницы (крутилка)
-    followingInProgress: [] // состояние кнопки follow/unfollow
+    followingInProgress: [], // состояние кнопки follow/unfollow
+    // fake: 10// 83 - тестировали reselector
 };
 
 const usersReducer = ( state = initialState, action ) => {
 
     switch (action.type) {
+        // case FAKE: return {...state, fake: state.fake + 1}// 83 - тестировали reselector
+
         case FOLLOW:
             return {
                 ...state,
