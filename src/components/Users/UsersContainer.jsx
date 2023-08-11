@@ -104,7 +104,7 @@ class UsersContainer extends React.Component { // без extends React.Component
 let mapStateToProps = ( state ) => { //#81 - создали под users-selectors.jsx вместо закомменченного вверху
     return {
         // users: getUsers( state ), // 83 - закоментил, т.к. делаем через reselector, ранее -ф-цыя с users-selectors.jsx
-        users: getUsers( state ), // 83 - создали под реселектор
+        users: getUsers( state ), // 83 - создали под реселектор, на входе приниманимает только стейт, вся остальная магия происходит в users-selectors.jsx
         pageSize: getPageSize( state ),
         totalUsersCount: getTotalUsersCount( state ),
         currentPage: getCurrentPage( state ),
