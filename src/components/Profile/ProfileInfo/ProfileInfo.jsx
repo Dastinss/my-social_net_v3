@@ -2,6 +2,7 @@ import React from 'react';
 import s from './ProfileInfo.module.css';
 import Preloader from "../../Common/Preloader/Preloader";
 import ProfileStatus from './ProfileStatus'
+import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 
 const ProfileInfo = ( props ) => { // это презентационная компонента
     if (!props.profile) { // !props.profile=если профайла нет
@@ -16,7 +17,8 @@ const ProfileInfo = ( props ) => { // это презентационная ко
             {/*</div>*/}
             <div className={s.descriptionBlock}>
                 <img src={props.profile.photos.large}/>
-                <ProfileStatus status={props.status} updateStatus={props.updateStatus}/>
+                {/*<ProfileStatus status={props.status} updateStatus={props.updateStatus}/> // 84 удалил класовую компоненту и добавил функцилнальнеую*/}
+                <ProfileStatusWithHooks status={props.status} updateStatus={props.updateStatus}/> {/* // 84 заменил класовую компоненту на функцилнальнеую*/}
             </div>
         </div>
     )
