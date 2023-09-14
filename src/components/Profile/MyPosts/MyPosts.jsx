@@ -1,7 +1,6 @@
 import React from 'react';
 import s from './MyPosts.module.css'
 import Post from './Post/Post';
-import { addPostActionCreator, updateNewPostTextActionCreator } from "../../../redux/profile-reducer";
 import { Field, reduxForm } from "redux-form";
 import { maxLengthCreator, required } from "../../../utils/validators/validators";
 import { Textarea } from "../../Common/FormsControls/FormsControls";
@@ -24,7 +23,8 @@ const AddNewPostForm = ( props ) => { //76 выделили в отдельну�
 
 let AddNewPostFormRedux = reduxForm( { form: 'ProfileAddNewPostForm' } )( AddNewPostForm )
 
-const MyPosts = ( props ) => {
+const MyPosts = React.memo(props => { //87 обернули в React.memo чтобы не было перерисовок компоненты если не было изменений пропсов
+    console.log( 'RENDER' )
 // let postsData = [
 //     {id: 1, message: "Hi! How are you?", likesCount: 0},
 //     {id: 2, message: "It's my first post", likesCount: 20},
@@ -32,7 +32,8 @@ const MyPosts = ( props ) => {
 //     {id: 4, message: "DaDa", likesCount: 31},
 // ]
 
-    let postsElements = props.posts.map( p => <Post message={p.message} likesCount={p.likesCount} key={p.id}/> ); // добавил САМ!!! key={p.id}, т.к. ругалась система!!! УРА!!!))
+    let postsElements = props.posts.map( p => <Post message={p.message} likesCount={p.likesCount}
+                                                    key={p.id}/> ); // добавил САМ!!! key={p.id}, т.к. ругалась система!!! УРА!!!))
 
     let newPostElement = React.createRef() // єто нужно запомнить, т.е. это внутренняя примочка Реакта. Делаем ссылку на добавление в дальнейшем Поста из ТехтЭриа
 
@@ -80,6 +81,6 @@ const MyPosts = ( props ) => {
             </div>
         </div>
     )
-}
+});
 
 export default MyPosts;
