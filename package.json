@@ -51,5 +51,10 @@
   },
   "devDependencies": {
     "react-router": "^6.11.1"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-leaflet|@react-leaflet|d3-*|axios))"
+    ]
   }
 }

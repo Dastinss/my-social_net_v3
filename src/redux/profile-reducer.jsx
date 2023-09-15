@@ -4,11 +4,12 @@ import { profileAPI, userAPI } from "../api/api";
 const ADD_POST = 'ADD-POST';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
 const SET_STATUS = 'SET_STATUS';
+const DELETE_POST = 'DELETE_POST'; // #89
 // const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT'; //  #76  больше не апдейтим
 
 let initialState = { // одноразовый объект, стартовые да//  #76 закоментил он нам в стейте не нуженнные
     posts: [
-        { id: 1, message: "Hello! How are you???", likesCount: 0 },
+        { id: 1, message: "Hello! How are you???", likesCount: 12 },
         { id: 2, message: "It's my first post", likesCount: 20 },
         { id: 3, message: "BlaBla", likesCount: 11 },
         { id: 4, message: "DaDa", likesCount: 31 },
@@ -66,6 +67,14 @@ const profileReducer = ( state = initialState, action ) => { // перенесл
             }
 
         }
+
+        case DELETE_POST: {
+            return {
+                ...state,
+                posts: state.posts.filter(p => p.id != action.postId)
+            }
+        }
+
         default:
             return state;
 
@@ -88,15 +97,17 @@ const profileReducer = ( state = initialState, action ) => { // перенесл
     }
 };
 
-//перенесли с store.js
-export const addPostActionCreator = (newPostText) => ({ type: ADD_POST, newPostText }); // #75 добавили newPostText в объект и в непосредственно в актион
+//action creators -перенесли с store.js
+export const addPostActionCreator = ( newPostText ) => ({ type: ADD_POST, newPostText }); // #75 добавили newPostText в объект и в непосредственно в актион
 export const setUserProfile = ( profile ) => ({ type: SET_USER_PROFILE, profile }); //ф-ция которая возвращает нам обьект - action, в котором инкапсулированы все данные, чтобы редьюсер получил этот action и применил эти изменения на свой стейт
 export const setStatus = ( status ) => ({ type: SET_STATUS, status }); // #73 ф-ция которая возвращает нам обьект - action, в котором инкапсулированы все данные, чтобы редьюсер получил этот action и применил эти изменения на свой стейт
+export const deletePost = ( postId ) => ({ type: DELETE_POST, postId }); // #73 ф-ция которая возвращает нам обьект - action, в котором инкапсулированы все данные, чтобы редьюсер получил этот action и применил эти изменения на свой стейт
 
 export const getUserProfile = ( userId ) => ( dispatch ) => { // создаем санку - ф-цию, которая принимаем ф-цию диспатч и делает внутри какието ассинхронные операции и различные мелкие астины
-    userAPI.getProfile( userId ).then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
-        dispatch( setUserProfile( response.data ) );
-    } );
+    userAPI.getProfile( userId )
+        .then( response => { //делаем запрос на сервер с гет запросом для которого достаточно урл адреса, и говорим "когда сервак даст ответ, затем выполни этот колл бек/эту ф-цию" в которую в качестве ответа от сервера придет респонс
+            dispatch( setUserProfile( response.data ) );
+        } );
 }
 
 export const getStatus = ( userId ) => ( dispatch ) => { // # 73 создаем санку - ф-цию, которая принимаем ф-цию диспатч и делает внутри какието ассинхронные операции и различные мелкие астины
