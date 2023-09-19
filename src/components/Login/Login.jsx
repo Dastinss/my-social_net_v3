@@ -1,7 +1,7 @@
 import React from 'react';
 import { formToJSON } from "axios";
 import { Field, reduxForm } from "redux-form";
-import { Input } from "../Common/FormsControls/FormsControls";
+import { createField, Input } from "../Common/FormsControls/FormsControls";
 import { required } from "../../utils/validators/validators";
 import { connect } from "react-redux";
 import { login } from "../../redux/auth-reducer";
@@ -10,28 +10,36 @@ import { Redirect } from 'react-router';
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import styles from './../Common/FormsControls/FormsControls.module.css'
 
-const LoginForm = ( props ) => {
+const LoginForm = ( {handleSubmit, error} ) => { // #90 делаем деструктуризацию параметров - вместо "общих"  props указали конкретно, что нас интересует -  handleSubmit, error. НИже, соответственно, вместо props.handleSubmit поставили просто handleSubmit и вместо props.error поставили просто error
     return (
         <form
-            onSubmit={props.handleSubmit}> {/*у любой формы есть событие onSubmit, поскольку в пропсах есть handleSubmit (приходит из контейнерной компоненты), мы хотим доверить ему оработку сабмита*/}
-            <div>
-                <Field placeholder={'Email'} name={'email'}
-                       component={Input}
-                       validate={[required]}/>{/*#75 добавил имя name={УКАЗЫВАЕМ свойство} для отправки на сервер имени данного элемента куда мы вводим данные §77 добавили валидацию - ф-цию Input, validate={[required]}*/}
-                {/*<input placeholder={'Login'}/> // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту) из билиотеки reduxForm*/}
-            </div>
-            <div>
-                <Field placeholder={'Password'} name={'password'} type={'password'}
-                       component={Input}
-                       validate={[required]}/>
-                {/*<input placeholder={'Password'} // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту)из билиотеки reduxForm/>*/}
-            </div>
-            <div>
-                <Field component={Input} name={'rememberMe'} type={'checkbox'}/> remember me
-                {/*<input type={'checkbox'}/> remember me // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту)из билиотеки reduxForm/>*!/*/}
-            </div>
-            {props.error && <div className={styles.formSummaryError}>
-                {props.error}
+            onSubmit={handleSubmit}> {/*у любой формы есть событие onSubmit, поскольку в пропсах есть handleSubmit (приходит из контейнерной компоненты), мы хотим доверить ему оработку сабмита*/}
+
+            {/* // #90 c помощью ф-ции хэлпера убираем дублирование кода*/}
+            {createField ('Email','email', [required], Input )}
+            {createField ('Password','password', [required], Input, {type: 'password'})}
+            {createField (null,'rememberMe', [], Input, {type: 'checkbox'}, 'remember me')}
+
+            {/*<div>*/} {/* // #90 закоментили дублирование кода*/}
+            {/*    <Field placeholder={'Email'} name={'email'}*/}
+            {/*           component={Input}*/}
+            {/*           validate={[required]}/>/!*#75 добавил имя name={УКАЗЫВАЕМ свойство} для отправки на сервер имени данного элемента куда мы вводим данные §77 добавили валидацию - ф-цию Input, validate={[required]}*!/*/}
+            {/*    /!*<input placeholder={'Login'}/> // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту) из билиотеки reduxForm*!/*/}
+            {/*</div>*/}
+
+            {/*<div>*/}
+            {/*    <Field placeholder={'Password'} name={'password'} type={'password'}*/}
+            {/*           component={Input}*/}
+            {/*           validate={[required]}/>*/}
+            {/*    /!*<input placeholder={'Password'} // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту)из билиотеки reduxForm/>*!/*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    <Field component={Input} name={'rememberMe'} type={'checkbox'}/> remember me*/}
+            {/*    /!*<input type={'checkbox'}/> remember me // #75 заменили на Field (по сути контейнерная компонента. которая рисует др компоненту)из билиотеки reduxForm/>*!/*!/*/}
+            {/*</div>*/}
+
+            {error && <div className={styles.formSummaryError}>
+                {error}
             </div>
             }
             <div>

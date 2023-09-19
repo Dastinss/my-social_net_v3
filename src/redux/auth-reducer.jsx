@@ -44,9 +44,9 @@ export const getAuthUserData = () => async ( dispatch ) => { // №90 добав
         // } ); // #90 закоментили потому что ввели await
 }
 
-export const login = ( email, password, rememberMe ) =>async ( dispatch ) => { // №90 добавили async и await //# 78 thunk делает ассинхронную операцию которая раньше делалсь в компоненте. принимает метод диспатч.  в даном случае задача санки - логиниться
+export const login = ( email, password, rememberMe ) => async ( dispatch ) => { // №90 добавили async и await //# 78 thunk делает ассинхронную операцию которая раньше делалсь в компоненте. принимает метод диспатч.  в даном случае задача санки - логиниться
     // authAPI.login( email, password, rememberMe ) // #90 закоментили потому что ввели await
-    let response = authAPI.login( email, password, rememberMe ) // #90
+    let response = await authAPI.login( email, password, rememberMe ) // #90
         // .then( response => { // подписываемся на этот промис с помощью then // #90 закоментили потому что ввели await
             if (response.data.resultCode === 0) { //проверка обязательная о том ,что если в респонсе в дате сидит resultCode = 0, то мы залогинены (берем из документации https://social-network.samuraijs.com/docs#auth_me_get инфо )  и только в этом случае мы должны задиспатчить эти авторизационные данные. Возьмем мы их из респонс
                 dispatch( getAuthUserData() )

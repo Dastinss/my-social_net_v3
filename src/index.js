@@ -8,6 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import store from "./redux/redux-store";
 import './index.css';
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 // import StoreContext, { Provider } from "./StoreContext"; // удалил урок 45 компоненту StoreContext после установки библиотеки react-redux
 // import {addPost, updateNewPostText} from "./redux/state";
 
@@ -20,8 +21,9 @@ import { Provider } from "react-redux";
 
 const root = ReactDOM.createRoot( document.getElementById( 'root' ) ); // ВОТ ЭТА СТРОКА - ее скопировал с каментов с урока 34, т.к. біла ошибка изза обновления
 //let rerenderEnrireTree = ( state ) => { // убрали перерисовку в уроке 47 после того как в уроке 46 добавили connect, который внутри себя сам делает ЕДИНОЖДЫ ОТРИСОВКУ
-    root.render(
-        <React.StrictMode>
+root.render(
+    <React.StrictMode>
+        <BrowserRouter>{/* //#90 перенесли из Арр т.к. нельзя его было оборачивать BrowserRouter-ом*/}
             <Provider store={store}>
                 {/*<App state={state} //везде заменили state на store._state, а далее на getState () т.к. напрямую к приватному св-ву обращаться не можем*/}
                 {/*     addPost={store.addPost.bind(store)} // отдавая свой метод кому то и хотим, чтобы владелец этого метода сохранился, мы должны этот метод забендить (связать через bind) с владельцем этого метода поэтому стоит два раза store*/}
@@ -31,8 +33,9 @@ const root = ReactDOM.createRoot( document.getElementById( 'root' ) ); // ВОТ
                 {/*<App state={state} dispatch={store.dispatch.bind( store )} store={store}/> // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext т.е. дали доступ store ко всем компонентам внутри App*/}
                 <App/>
             </Provider>
-        </React.StrictMode>
-    );
+        </BrowserRouter>
+    </React.StrictMode>
+);
 
 //}
 

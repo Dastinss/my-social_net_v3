@@ -14,7 +14,7 @@ let initialState = { // одноразовый объект, стартовые 
         { id: 6, name: 'Bogdana' }
     ],
     messages: [
-        { id: 1, message: 'Hello!!' },
+        { id: 1, message: 'Hello!' },
         { id: 2, message: 'How are you?' },
         { id: 3, message: 'Yo' },
         { id: 4, message: 'Yo' },
