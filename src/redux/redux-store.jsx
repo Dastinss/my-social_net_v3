@@ -18,6 +18,9 @@ let reducers = combineReducers({ // єто ф-ция, которая соеди�
     app: appReducer // #80 за арр отвечает appReducer
 });
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // 91 добавил из https://github.com/reduxjs/redux-devtools/tree/main/extension#installation
+const store = createStore(reducer, composeEnhancers(applyMiddleware(...middleware)));
+
 let store = createStore(reducers, applyMiddleware(thunkMiddleware)); // создаем редаксовский стор с помощью этой ф-ции которой передаем закомбайененные редьюсеры, в уроке 66 добавили applyMiddleware для редакс thunk
 
 window.store = store;
