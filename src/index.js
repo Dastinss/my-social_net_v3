@@ -5,10 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 // import state, {subscriber} from "./redux/state";
 // import store from "./redux/store"; // закоментили после добавления redux
-import store from "./redux/redux-store";
+// import store from "./redux/redux-store"; // 92 перенесли в Арр
 import './index.css';
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import SamuraiJSApp from "./App";
+// import { BrowserRouter } from "react-router-dom"; // 92 перенесли в Арр
 // import StoreContext, { Provider } from "./StoreContext"; // удалил урок 45 компоненту StoreContext после установки библиотеки react-redux
 // import {addPost, updateNewPostText} from "./redux/state";
 
@@ -23,17 +24,18 @@ const root = ReactDOM.createRoot( document.getElementById( 'root' ) ); // ВОТ
 //let rerenderEnrireTree = ( state ) => { // убрали перерисовку в уроке 47 после того как в уроке 46 добавили connect, который внутри себя сам делает ЕДИНОЖДЫ ОТРИСОВКУ
 root.render(
     <React.StrictMode>
-        <BrowserRouter>{/* //#90 перенесли из Арр т.к. нельзя его было оборачивать BrowserRouter-ом*/}
-            <Provider store={store}>
-                {/*<App state={state} //везде заменили state на store._state, а далее на getState () т.к. напрямую к приватному св-ву обращаться не можем*/}
-                {/*     addPost={store.addPost.bind(store)} // отдавая свой метод кому то и хотим, чтобы владелец этого метода сохранился, мы должны этот метод забендить (связать через bind) с владельцем этого метода поэтому стоит два раза store*/}
-                {/*     updateNewPostText={store.updateNewPostText.bind(store)}/>*/}
+        <SamuraiJSApp/>
+        {/*<BrowserRouter>/!* // 92 закоментил - перенес в Арр //#90 перенесли из Арр т.к. нельзя его было оборачивать BrowserRouter-ом*!/*/}
+        {/*    <Provider store={store}>*/}
+        {/*        /!*<App state={state} //везде заменили state на store._state, а далее на getState () т.к. напрямую к приватному св-ву обращаться не можем*!/*/}
+        {/*        /!*     addPost={store.addPost.bind(store)} // отдавая свой метод кому то и хотим, чтобы владелец этого метода сохранился, мы должны этот метод забендить (связать через bind) с владельцем этого метода поэтому стоит два раза store*!/*/}
+        {/*        /!*     updateNewPostText={store.updateNewPostText.bind(store)}/>*!/*/}
 
-                {/*//заменили закоменченные выше два метода на один dispatch*/}
-                {/*<App state={state} dispatch={store.dispatch.bind( store )} store={store}/> // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext т.е. дали доступ store ко всем компонентам внутри App*/}
-                <App/>
-            </Provider>
-        </BrowserRouter>
+        {/*        /!* заменили закоменченные выше два метода на один dispatch*!/*/}
+        {/*        /!*<App state={state} dispatch={store.dispatch.bind( store )} store={store}/> // закоментили в уроке 44 когда создали контейнерную компоненту StoreContext т.е. дали доступ store ко всем компонентам внутри App*!/*/}
+        {/*        <App/>*/}
+        {/*    </Provider>*/}
+        {/*</BrowserRouter>*/}
     </React.StrictMode>
 );
 
