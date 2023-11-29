@@ -94,7 +94,7 @@ class UsersContainer extends React.Component { // без extends React.Component
 //     return {
 //         users: state.usersPage.users, // с помощью mapStateToProps придет в ф-циональную компоненту Users в пропсах будет сидеть св-во users: значением которого будут пользователи из стейта (.users)
 //         pageSize: state.usersPage.pageSize,
-//         totalUsersCount: state.usersPage.totalUsersCount,
+//         totalItemsCount: state.usersPage.totalItemsCount,
 //         currentPage: state.usersPage.currentPage, //чтобы наша компонента в пропсах получила это значение
 //         isFetching: state.usersPage.isFetching,
 //         followingInProgress: state.usersPage.followingInProgress

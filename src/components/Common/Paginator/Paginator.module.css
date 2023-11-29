@@ -1,4 +1,15 @@
-.selectedPage {
+.paginator { /*//#93 добавил*/
+    margin: 10px;
+}
+
+.pageNumber { /*//#93 добавил*/
+    padding: 2px;
+    border: 1px solid grey;
+}
+
+.pageNumber.selectedPage {
     font-weight: bold;
-    font-size: 25px;
+    /*font-size: 25px;*/
+    border-color: black; /*//#93 добавил*/
+
 }

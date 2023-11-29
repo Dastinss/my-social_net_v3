@@ -4,14 +4,14 @@ import User from "./User";
 
 let Users = ( { totalUsersCount, pageSize, currentPage, onPageChanger, users, ...props } ) => { // #90 делаем деструктуризацию параметров - вместо "общerо" meta указали внутреннюю деструктуризацию
     // #90 перенесли в отдельную компоненту Paginator. См.ниже
-    // let pagesCount = Math.ceil( props.totalUsersCount / props.pageSize ); // на сколько страниц делим выдаваемое с сервера кол-во пользователей
+    // let pagesCount = Math.ceil( props.totalItemsCount / props.pageSize ); // на сколько страниц делим выдаваемое с сервера кол-во пользователей
     // let pages = []; //кол-во страниц с нашими юзерами с сервера
     // for (let i = 1; i <= pagesCount; i++) {
     //     pages.push( i )
     // }
 
     return <div>
-        <Paginator currentPage={currentPage} onPageChanger={onPageChanger} totalUsersCount={totalUsersCount}
+        <Paginator currentPage={currentPage} onPageChanger={onPageChanger} totalItemsCount={totalUsersCount}
                    pageSize={pageSize}/>
         {/*/!*<div>*!/ // #90 перенесли в отдельную компоненту Paginator. См.выше*/}
         {/*    {pages.map( p => {*/}
